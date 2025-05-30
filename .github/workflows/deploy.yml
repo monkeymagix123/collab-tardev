@@ -23,7 +23,10 @@ jobs:
           cache: 'pnpm'
 
       - name: Install pnpm
-        run: npm install -g pnpm
+        run: |
+          npm install -g pnpm
+          echo "$(npm config get prefix)/bin" >> $GITHUB_PATH # Add global npm bin to PATH
+        shell: bash # Explicitly use bash to ensure shell commands work as expected
 
       - name: Install dependencies
         run: pnpm install
