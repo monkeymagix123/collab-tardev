@@ -1,5 +1,10 @@
 import { defineConfig } from 'vite'
 
+const repository = "collab-tardev";
+const isProduction = process.env.NODE_ENV === 'production';
+
+const base = isProduction ? `/${repository}/` : "";
+
 export default defineConfig({
   build: {
     outDir: 'dist', // GitHub Pages-friendly
@@ -8,5 +13,5 @@ export default defineConfig({
   server: {
     port: 4000,
   },
-  base: '/collab-tardev/', //<-- Replace 'my-idle-game' with your actual repository name!
+  base: base,
 });
