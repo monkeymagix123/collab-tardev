@@ -7,5 +7,6 @@ export default defineConfig({
   },
   server: {
     port: 4000,
-  }
+  },
+  base: '/collab-tardev/', //<-- Replace 'my-idle-game' with your actual repository name!
 });
