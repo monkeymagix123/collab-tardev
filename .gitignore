@@ -1,13 +1,4 @@
-# copied from survev
-
-
 reference/
-
-# config file
-# legacy
-resurviv-config.json
-# new
-survev-config.json
 
 # env file
 .env
