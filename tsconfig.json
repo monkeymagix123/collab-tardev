@@ -1,10 +1,12 @@
 {
   "compilerOptions": {
+    "jsx": "react-jsx", // or "react" if you're not on React 17+ and not using the new JSX transform
+    "lib": ["dom", "dom.iterable", "esnext"], // Essential for browser APIs and modern JS
     "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "Node",
     "strict": true,
-    "jsx": "preserve",
+    // "jsx": "preserve",
     "esModuleInterop": true,
     "skipLibCheck": true
   },

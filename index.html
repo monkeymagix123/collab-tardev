@@ -1,25 +1,22 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <title>random idle game that i cant think of a better name for</title>
-
-    <!-- add favicon later! -->
-    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
-
-    <!-- load scripts in -->
-    <script type="module" src="./src/main.ts" defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React Idle Clicker</title>
+    <link href="[https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap](https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap)" rel="stylesheet">
+    <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
+    <style>
+        /* Apply Inter font globally */
+        body { font-family: 'Inter', sans-serif; }
+        /* Add a subtle text shadow for better readability on gradients */
+        .text-shadow-lg {
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+    </style>
 </head>
-
-
 <body>
-    <p> bard its supposed to go here </p>
-    <h1>Idle Game</h1>
-    <p>Coins: <span id="coin-count">0</span></p>
-    <button id="click-button">Click for Coins</button>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
 </body>
-
 </html>

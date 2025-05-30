@@ -1,4 +1,5 @@
-import { defineConfig } from 'vite'
+import { defineConfig } from 'vite';
+import react from "@vitejs/plugin-react";
 
 const repository = "collab-tardev";
 const isProduction = process.env.NODE_ENV === 'production';
@@ -14,4 +15,5 @@ export default defineConfig({
     port: 4000,
   },
   base: base,
+  plugins: [react()]
 });
