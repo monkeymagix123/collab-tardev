@@ -11,3 +11,15 @@ body { font-family: 'Inter', sans-serif; }
 .text-shadow-lg {
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
+
+/* Define your custom button class */
+/* @layer components { */ /* Or @layer utilities */
+  /* .btn-primary-yellow {
+    @apply bg-yellow-400 hover:bg-yellow-500 text-purple-900 font-bold py-4 px-8 rounded-full shadow-lg transform transition-all duration-200 ease-in-out active:scale-95 focus:outline-none focus:ring-4 focus:ring-yellow-300 focus:ring-opacity-75 text-2xl;
+  } */
+
+  /* You could define variants too! */
+  /* .btn-secondary-blue {
+    @apply bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg;
+  } */
+/* } */
