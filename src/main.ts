@@ -1,4 +1,5 @@
 import { createApp, ref, computed } from 'vue';
+import './assets/tailwind.css';
 
 /**
  * Defines the reactive state for our simple idle game.
@@ -31,7 +32,7 @@ const clickForCoins = () => {
 const app = createApp({
   template: `
     <div class="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-500 to-purple-600 text-white p-4">
-      <div class="bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg rounded-2xl p-8 shadow-2xl border border-white border-opacity-30 w-full max-w-md text-center">
+      <div class="bg-white/20 backdrop-filter backdrop-blur-lg rounded-2xl p-8 shadow-2xl border border-white border-opacity-30 w-full max-w-md text-center">
         <h1 class="text-5xl font-bold mb-6 text-shadow-lg">Vue Idle Clicker</h1>
         <p class="text-3xl mb-8">Coins: <span class="font-extrabold text-yellow-300">{{ coins }}</span></p>
         <button
