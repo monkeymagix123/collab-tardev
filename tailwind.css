@@ -1,0 +1,14 @@
+/* src/assets/tailwind.css */
+@import "tailwindcss";
+
+/* Ensure html and body take full height for min-h-screen to work */
+/* html, body {
+    height: 100%;
+} */
+
+/* Apply Inter font globally */
+body { font-family: 'Inter', sans-serif; }
+/* Add a subtle text shadow for better readability on gradients */
+.text-shadow-lg {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
