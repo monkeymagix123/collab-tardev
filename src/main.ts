@@ -1,5 +1,4 @@
 import { createApp, ref, computed } from 'vue';
-import '../tailwind.css';
 
 /**
  * Defines the reactive state for our simple idle game.
