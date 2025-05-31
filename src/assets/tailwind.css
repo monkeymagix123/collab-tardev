@@ -12,6 +12,12 @@ body { font-family: 'Inter', sans-serif; }
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
+.number-display {
+    font-family: 'Open Sans', sans-serif; /* Use a font that supports tabular-nums */
+    /* font-size: 2em; */
+    font-variant-numeric: tabular-nums; /* This is the key! */
+}
+
 /* Define your custom button class */
 /* @layer components { */ /* Or @layer utilities */
   /* .btn-primary-yellow {
