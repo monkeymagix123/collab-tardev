@@ -52,11 +52,6 @@ export class Game {
         // console.log(this.coins.value);
     };
 
-    getCoins() {
-        // return computed(() => this.coins.toPrecision(3));;
-        return ref(Math.floor(this.coins).toLocaleString());
-    }
-
     doUpdate() {
         const dt = Date.now() - this.time;
         this.update(dt / 1000);
