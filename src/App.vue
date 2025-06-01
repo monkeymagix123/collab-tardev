@@ -28,24 +28,23 @@
     import { ref, computed } from 'vue'
 
     // Import the tab content components
-    // import TabOne from './tabs/TabOne.vue'
-    // import TabTwo from './tabs/TabTwo.vue'
-    // import TabThree from './tabs/TabThree.vue'
     import Resources from './tabs/Resources.vue'
+    import Science from './tabs/Science.vue'
 
     // Define tab metadata
     interface TabItem {
-    name: string
-    label: string
-    component: any
+        name: string
+        label: string
+        component: any
     }
 
     const tabs: TabItem[] = [
-        { name: 'tab1', label: 'Resources', component: Resources },
-        { name: 'tab2', label: 'peak', component: Resources },
+        { name: 'resources', label: 'Resources', component: Resources },
+        { name: 'peak', label: 'peak', component: Resources },
+        { name: 'science', label: 'Science', component: Science },
     ]
 
-    const activeTab = ref('tab1')
+    const activeTab = ref(tabs[0].name);
 
     const currentComponent = computed(() => {
     return tabs.find(tab => tab.name === activeTab.value)?.component || null
