@@ -8,7 +8,7 @@ export class Game {
      * When `coins.value` changes, Vue automatically knows to re-render parts of the UI that depend on it.
      */
     coins = Config.startCoins;
-    coinsRef = ref(this.coins.toPrecision(3));
+    coinsRef = ref(Math.floor(this.coins).toLocaleString());
 
     dimensions = ref(new Array(8).fill(0));
     // dimRef = reactive(new Array(8));
@@ -53,7 +53,8 @@ export class Game {
     };
 
     getCoins() {
-        return computed(() => this.coins.toPrecision(3));;
+        // return computed(() => this.coins.toPrecision(3));;
+        return ref(Math.floor(this.coins).toLocaleString());
     }
 
     doUpdate() {
@@ -67,7 +68,8 @@ export class Game {
         dt = Math.min(dt, 60 * 60 * 24);
 
         this.coins += this.dimensions.value[0] * dt;
-        this.coinsRef.value = this.coins.toPrecision(3);
+        // this.coinsRef.value = this.coins.toPrecision(3);
+        this.coinsRef.value = Math.floor(this.coins).toLocaleString();
     }
 
     calculateDimensionCost() {
