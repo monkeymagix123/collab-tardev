@@ -1,27 +1,29 @@
 <template>
-  <div class="flex h-screen">
-    <!-- Tabs -->
-    <div class="w-48 bg-gray-100 border-r">
-      <ul>
-        <li
-          v-for="tab in tabs"
-          :key="tab.name"
-          :class="[
-            'p-4 cursor-pointer',
-            activeTab === tab.name ? 'bg-white font-bold' : 'hover:bg-gray-200'
-          ]"
-          @click="activeTab = tab.name"
-        >
-          {{ tab.label }}
-        </li>
-      </ul>
-    </div>
+    <div class="bg-gradient-to-br from-blue-500 to-purple-600 text-white p-4">
+        <div class="flex h-screen">
+            <!-- Tabs -->
+            <div class="w-48 bg-gradient-to-b from-blue-700 via-purple-700 to-blue-800 border-r border-white/20">
+            <ul>
+                <li
+                v-for="tab in tabs"
+                :key="tab.name"
+                :class="[
+                    'p-4 cursor-pointer',
+                    activeTab === tab.name ? 'bg-gradient-to-r from-blue-600 to-purple-700 text-white font-semibold shadow-lg' : 'text-white/75 hover:text-white hover:bg-white/10'
+                ]"
+                @click="activeTab = tab.name"
+                >
+                {{ tab.label }}
+                </li>
+            </ul>
+            </div>
 
-    <!-- Tab Content -->
-    <div class="flex-1 p-6">
-      <component :is="currentComponent" />
+            <!-- Tab Content -->
+            <div class="flex-1 p-6">
+            <component :is="currentComponent" />
+            </div>
+        </div>
     </div>
-  </div>
 </template>
 
 <script lang="ts" setup>
@@ -41,7 +43,8 @@
     }
 
     const tabs: TabItem[] = [
-    { name: 'tab1', label: 'Resources', component: Resources },
+        { name: 'tab1', label: 'Resources', component: Resources },
+        { name: 'tab2', label: 'peak', component: Resources },
     ]
 
     const activeTab = ref('tab1')
