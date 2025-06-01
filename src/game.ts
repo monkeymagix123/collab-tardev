@@ -13,7 +13,7 @@ export class Game {
     dimensions = ref(new Array(8).fill(0));
     // dimRef = reactive(new Array(8));
 
-    time: number;
+    time: number = -1;
 
     /**
      * A computed property that calculates coins gained per click.
@@ -23,13 +23,15 @@ export class Game {
     coinsPerClick = computed(() => 1);
 
     constructor() {
-        // calculate offline progress
-
         // load save data
         let localSave = localStorage.getItem("saveData");
         if (localSave) {
             this.load(JSON.parse(localSave));
         }
+        
+        // calculate offline progress
+        if (this.time != -1)
+            this.update((Date.now() - this.time) / 1000);
 
         // this.clickForCoins = this.clickForCoins.bind(this);
         this.time = Date.now();
@@ -61,6 +63,9 @@ export class Game {
     }
 
     update(dt: number) {
+        // cap 24 hrs offline time
+        dt = Math.min(dt, 60 * 60 * 24);
+
         this.coins += this.dimensions.value[0] * dt;
         this.coinsRef.value = this.coins.toPrecision(3);
     }
