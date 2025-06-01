@@ -93,6 +93,8 @@ export class Game {
             const val = this[key];
             if (val && typeof val === 'object' && 'value' in val) {
                 result[key] = val.value;
+            } else if (val) {
+                result[key] = val;
             }
         }
         return result;
