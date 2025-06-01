@@ -1,5 +1,5 @@
 <template>
-    <div class="min-h-screen flex flex-col items-center justify-center">
+    <div class="h-full flex flex-col items-center justify-center">
       <!-- <div class="bg-white/20 backdrop-filter backdrop-blur-lg rounded-2xl p-8 shadow-2xl border border-white border-opacity-30 w-full max-w-md text-center"> -->
         <h1 class="text-5xl font-bold mb-6 text-shadow-lg">Vue Idle Clicker</h1>
         <p class="text-3xl mb-8">Coins: <span class="font-extrabold text-yellow-300 number-display">{{ game.coinsRef }}</span></p>
