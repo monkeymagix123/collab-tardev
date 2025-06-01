@@ -1,38 +1,57 @@
 <template>
-    <div class="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-500 to-purple-600 text-white p-4">
-      <div class="bg-white/20 backdrop-filter backdrop-blur-lg rounded-2xl p-8 shadow-2xl border border-white border-opacity-30 w-full max-w-md text-center">
-        <h1 class="text-5xl font-bold mb-6 text-shadow-lg">Vue Idle Clicker</h1>
-        <p class="text-3xl mb-8">Coins: <span class="font-extrabold text-yellow-300 number-display">{{ game.coinsRef }}</span></p>
-        
-        <!-- <button
-          @click="game.clickForCoins"
-          class="bg-yellow-400 hover:bg-yellow-500 text-purple-900 font-bold py-4 px-8 rounded-full shadow-lg transform transition-all duration-200 ease-in-out active:scale-95 focus:outline-none focus:ring-4 focus:ring-yellow-300 focus:ring-opacity-75 text-2xl"
+  <div class="flex h-screen">
+    <!-- Tabs -->
+    <div class="w-48 bg-gray-100 border-r">
+      <ul>
+        <li
+          v-for="tab in tabs"
+          :key="tab.name"
+          :class="[
+            'p-4 cursor-pointer',
+            activeTab === tab.name ? 'bg-white font-bold' : 'hover:bg-gray-200'
+          ]"
+          @click="activeTab = tab.name"
         >
-          Click for {{ game.coinsPerClick }} Coin{{ game.coinsPerClick === 1 ? '' : 's' }}
-        </button> -->
-
-        <p class="text-3xl mb-8">Dimensions: <span class="font-extrabold text-yellow-300">{{ game.dimensions.value[0] }}</span></p>
-
-        <button
-          @click="game.buyDimension"
-          class="bg-yellow-400 hover:bg-yellow-500 text-purple-900 font-bold py-4 px-8 rounded-full shadow-lg transform transition-all duration-200 ease-in-out active:scale-95 focus:outline-none focus:ring-4 focus:ring-yellow-300 focus:ring-opacity-75 text-2xl"
-        >
-          Buy a dimension for {{ game.calculateDimensionCost() }} Coin{{ game.calculateDimensionCost() === 1 ? '' : 's' }}
-        </button>
-      </div>
+          {{ tab.label }}
+        </li>
+      </ul>
     </div>
+
+    <!-- Tab Content -->
+    <div class="flex-1 p-6">
+      <component :is="currentComponent" />
+    </div>
+  </div>
 </template>
 
-<script setup lang="ts">
-    import game from './setup';
-    import Button from './components/Button.vue';
+<script lang="ts" setup>
+    import { ref, computed } from 'vue'
+
+    // Import the tab content components
+    // import TabOne from './tabs/TabOne.vue'
+    // import TabTwo from './tabs/TabTwo.vue'
+    // import TabThree from './tabs/TabThree.vue'
+    import Resources from './tabs/Resources.vue'
+
+    // Define tab metadata
+    interface TabItem {
+    name: string
+    label: string
+    component: any
+    }
+
+    const tabs: TabItem[] = [
+    { name: 'tab1', label: 'Resources', component: Resources },
+    ]
+
+    const activeTab = ref('tab1')
+
+    const currentComponent = computed(() => {
+    return tabs.find(tab => tab.name === activeTab.value)?.component || null
+    })
 </script>
 
-<style src="./assets/tailwind.css"></style>
 <!-- <style scoped>
-    @reference "./assets/tailwind.css";
-
-    button {
-        @apply bg-yellow-400 hover:bg-yellow-500 text-purple-900 font-bold py-4 px-8 rounded-full shadow-lg transform transition-all duration-200 ease-in-out active:scale-95 focus:outline-none focus:ring-4 focus:ring-yellow-300 focus:ring-opacity-75 text-2xl
-    }
+/* Optional styles */
 </style> -->
+<style src="./assets/tailwind.css"></style>
