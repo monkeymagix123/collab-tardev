@@ -16,5 +16,5 @@
 
 <script setup lang="ts">
     import game from '../setup';
-    import Button from '../components/Button.vue';
+    import YellowButton from '../components/YellowButton.vue';
 </script>

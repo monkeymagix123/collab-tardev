@@ -51,6 +51,6 @@
     })
 </script>
 
-<!-- <style scoped>
-/* Optional styles */
-</style> -->
+<style scoped>
+    /* Optional styles */
+</style>
