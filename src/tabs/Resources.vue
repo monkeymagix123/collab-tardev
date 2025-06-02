@@ -18,6 +18,15 @@
           for <span class="font-extrabold">{{ game.calculateDimensionCost().value.toLocaleString() }}</span> antimatter
         </p>
       </YellowButton>
+
+      <DimensionsRow
+        :dimension="1"
+        :on-buy-click="game.buyDimension()"
+      />
+      <DimensionsRow
+        :dimension="2"
+        :on-buy-click="game.buyDimension()"
+      />
     </div>
 </template>
 
@@ -25,4 +34,5 @@
     import game from '../setup';
     import YellowButton from '../components/YellowButton.vue';
     import { styler } from '../styler';
+    import DimensionsRow from '../components/DimensionsRow.vue';
 </script>

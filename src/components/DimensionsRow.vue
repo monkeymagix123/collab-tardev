@@ -1,11 +1,11 @@
 <template>
-  <div class="flex items-center justify-between p-4 bg-white shadow-lg rounded-xl mb-4 max-w-md mx-auto">
-    <div class="text-lg font-semibold text-gray-800">
-      Dimension: {{ dimension }}
+  <div class="flex w-full items-center justify-between p-4 shadow-lg rounded-xl mb-4 max-w-3xl mx-auto">
+    <div class="flex-2 text-lg font-semibold">
+        <span> number of dimensions </span> <span>{{ styler.endInt(dimension) }}</span> Antimatter Dimension
     </div>
     <button
-      @click="buyDimension"
-      class="px-6 py-2 bg-blue-600 text-white font-bold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 transition duration-300 ease-in-out transform hover:scale-105"
+      @click="handleButtonClick"
+      class="flex-1 px-6 py-2 bg-blue-600 text-white font-bold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 transition duration-300 ease-in-out transform hover:scale-105"
     >
       Buy Another Dimension
     </button>
@@ -14,21 +14,22 @@
 
 <script setup>
 import { ref } from 'vue';
+import { styler } from '../styler';
 
 // Define props for the component
 // 'dimension' is a prop to display the current dimension value.
+// 'onBuyClick' is a new prop that expects a Function. This will be the custom click handler.
 const props = defineProps({
-  dimension: Number
+  dimension: Number,
+  onBuyClick: Function // Define the prop as a Function type
 });
 
-// Define emits for the component
-// 'buy-dimension' is an event that will be emitted when the button is clicked.
-const emit = defineEmits(['buy-dimension']);
-
 // Method to handle the button click.
-// It emits the 'buy-dimension' event, which the parent component can listen to.
-const buyDimension = () => {
-  emit('buy-dimension');
+// It now calls the 'onBuyClick' function passed via props, if it exists.
+const handleButtonClick = () => {
+  if (props.onBuyClick) {
+    props.onBuyClick(); // Execute the custom function provided by the parent
+  }
 };
 </script>
 
