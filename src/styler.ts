@@ -5,6 +5,6 @@ export const styler = {
         if (a < 10) {
             return a.toLocaleString(undefined, { minimumSignificantDigits: 2, maximumSignificantDigits: 2 });
         }
-        return (a.toLocaleString(undefined, { maximumSignificantDigits: 3, minimumSignificantDigits: 3 }));
+        return (a.toLocaleString(undefined, { maximumFractionDigits: 0 }));
     }
 }
