@@ -14,9 +14,8 @@
       </p>
 
       <YellowButton @click="game.buyDimension()">
-        <p> Buy 1 </p>
-        <p>
-          Cost: <span class="font-extrabold">{{ game.calculateDimensionCost().value.toLocaleString() }}</span> Coin{{ game.calculateDimensionCost().value === 1 ? '' : 's' }}
+        <p> Buy 1
+          for <span class="font-extrabold">{{ game.calculateDimensionCost().value.toLocaleString() }}</span> antimatter
         </p>
       </YellowButton>
     </div>
