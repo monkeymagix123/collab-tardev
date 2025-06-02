@@ -4,13 +4,13 @@
         <div class="w-48 bg-gradient-to-b from-blue-700 via-purple-700 to-blue-800 border-r border-white/20">
         <ul>
             <li
-            v-for="tab in tabs"
-            :key="tab.name"
-            :class="[
-                'p-4 cursor-pointer',
-                activeTab === tab.name ? 'bg-gradient-to-r from-blue-600 to-purple-700 text-white font-semibold shadow-lg' : 'text-white/75 hover:text-white hover:bg-white/10'
-            ]"
-            @click="activeTab = tab.name"
+                v-for="tab in tabs"
+                :key="tab.name"
+                :class="[
+                    'p-4 cursor-pointer',
+                    activeTab === tab.name ? 'bg-gradient-to-r from-blue-600 to-purple-700 text-white font-semibold shadow-lg' : 'text-white/75 hover:text-white hover:bg-white/10'
+                ]"
+                @click="activeTab = tab.name"
             >
             {{ tab.label }}
             </li>
@@ -19,7 +19,7 @@
 
         <!-- Tab Content -->
         <div class="flex-1 p-6">
-        <component :is="currentComponent" />
+            <component :is="currentComponent" />
         </div>
     </div>
 </template>
@@ -54,4 +54,3 @@
 <!-- <style scoped>
 /* Optional styles */
 </style> -->
-<style src="./assets/tailwind.css"></style>

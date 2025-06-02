@@ -2,6 +2,8 @@ import { createApp, ref, computed } from 'vue';
 
 import App from './App.vue';
 
+import './assets/tailwind.css'
+
 /**
  * Creates the main Vue application instance.
  * The `template` option defines the HTML structure for the root component.

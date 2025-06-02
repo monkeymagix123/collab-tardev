@@ -18,5 +18,3 @@
     import game from '../setup';
     import Button from '../components/Button.vue';
 </script>
-
-<style src="../assets/tailwind.css"></style>
