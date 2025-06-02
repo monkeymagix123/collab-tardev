@@ -40,7 +40,6 @@
 
     const tabs: TabItem[] = [
         { name: 'resources', label: 'Resources', component: Resources },
-        { name: 'peak', label: 'peak', component: Resources },
         { name: 'science', label: 'Science', component: Science },
     ]
 
