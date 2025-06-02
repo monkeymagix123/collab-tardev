@@ -14,8 +14,13 @@ body { font-family: 'Inter', sans-serif; }
 
 .number-display {
     font-family: 'Open Sans', sans-serif; /* Use a font that supports tabular-nums */
-    /* font-size: 2em; */
+    font-size: 2em;
     font-variant-numeric: tabular-nums; /* This is the key! */
+    /* font-size: 60px; */
+}
+
+.small-text {
+  font-size: 18px;
 }
 
 /* Define your custom button class */

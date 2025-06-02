@@ -2,7 +2,7 @@ import { createApp, ref, computed } from 'vue';
 
 import App from './App.vue';
 
-import './assets/tailwind.css'
+import './assets/style.css'
 
 /**
  * Creates the main Vue application instance.

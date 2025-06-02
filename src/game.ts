@@ -1,5 +1,6 @@
 import { createApp, ref, computed, reactive } from 'vue';
 import { Config } from './config';
+import { styler } from './styler';
 
 export class Game {
     /**
@@ -7,8 +8,8 @@ export class Game {
      * `ref` is used to create a reactive reference to a primitive value (like a number).
      * When `coins.value` changes, Vue automatically knows to re-render parts of the UI that depend on it.
      */
-    coins = Config.startCoins;
-    coinsRef = ref(Math.floor(this.coins).toLocaleString());
+    coins = ref(Config.startCoins);
+    coinsRef = ref(styler.writeNumber(this.coins.value));
 
     dimensions = ref(new Array(8).fill(0));
     // dimRef = reactive(new Array(8));
@@ -48,7 +49,7 @@ export class Game {
      * Increments the `coins` reactive variable by the `coinsPerClick` amount.
      */
     clickForCoins = () => {
-        this.coins += this.coinsPerClick.value;
+        this.coins.value += this.coinsPerClick.value;
         // console.log(this.coins.value);
     };
 
@@ -62,9 +63,9 @@ export class Game {
         // cap 24 hrs offline time
         dt = Math.min(dt, 60 * 60 * 24);
 
-        this.coins += this.dimensions.value[0] * dt;
+        this.coins.value += this.dimensions.value[0] * dt;
         // this.coinsRef.value = this.coins.toPrecision(3);
-        this.coinsRef.value = Math.floor(this.coins).toLocaleString();
+        this.coinsRef.value = styler.writeNumber(this.coins.value);
     }
 
     calculateDimensionCost() {
@@ -73,9 +74,9 @@ export class Game {
 
     buyDimension() {
         const nextCost = this.calculateDimensionCost().value;
-        if (this.coins >= nextCost) {
+        if (this.coins.value >= nextCost) {
             this.dimensions.value[0]++;
-            this.coins -= nextCost;
+            this.coins.value -= nextCost;
         }
     }
 
