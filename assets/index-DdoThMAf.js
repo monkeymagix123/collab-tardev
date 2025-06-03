@@ -15970,11 +15970,11 @@ const _sfc_main$2 = {
         }),
         createVNode(_sfc_main$3, {
           dimension: 1,
-          "on-buy-click": unref(game).buyDimension()
+          "on-buy-click": () => unref(game).buyDimension()
         }, null, 8, ["on-buy-click"]),
         createVNode(_sfc_main$3, {
           dimension: 2,
-          "on-buy-click": unref(game).buyDimension()
+          "on-buy-click": () => unref(game).buyDimension()
         }, null, 8, ["on-buy-click"])
       ]);
     };
