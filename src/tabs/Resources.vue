@@ -30,7 +30,7 @@
     </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
     import game from '../setup';
     import YellowButton from '../components/YellowButton.vue';
     import { styler } from '../styler';
