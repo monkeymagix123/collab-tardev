@@ -21,11 +21,11 @@
 
       <DimensionsRow
         :dimension="1"
-        :on-buy-click="game.buyDimension()"
+        :on-buy-click="() => game.buyDimension()"
       />
       <DimensionsRow
         :dimension="2"
-        :on-buy-click="game.buyDimension()"
+        :on-buy-click="() => game.buyDimension()"
       />
     </div>
 </template>

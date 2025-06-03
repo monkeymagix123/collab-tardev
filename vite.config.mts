@@ -12,7 +12,7 @@ export default defineConfig({
     minify: false
   },
   server: {
-    port: 4000,
+    port: 3000,
   },
   base: base,
 
