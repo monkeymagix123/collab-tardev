@@ -15769,9 +15769,43 @@ const Config = {
   scale: 1.2
 };
 const styler = {
+  writeFullNumber: function(a) {
+    if (a < 10) {
+      return a.toLocaleString(void 0, { minimumSignificantDigits: 2, maximumSignificantDigits: 2 });
+    }
+    return a.toLocaleString(void 0, { maximumFractionDigits: 0 });
+  },
   writeNumber: function(a) {
     if (a < 10) {
       return a.toLocaleString(void 0, { minimumSignificantDigits: 2, maximumSignificantDigits: 2 });
+    }
+    let units = [
+      { value: 1e3, suffix: "K" },
+      // Thousand
+      { value: 1e6, suffix: "M" },
+      // Million
+      { value: 1e9, suffix: "B" },
+      // Billion
+      { value: 1e12, suffix: "T" },
+      // Trillion
+      { value: 1e15, suffix: "Q" },
+      // Quadrillion
+      { value: 1e18, suffix: "Qn" },
+      // Quintillion
+      { value: 1e21, suffix: "Sx" },
+      { value: 1e24, suffix: "Sp" },
+      { value: 1e27, suffix: "Oc" },
+      { value: 1e30, suffix: "No" },
+      { value: 1e33, suffix: "Dc" }
+    ];
+    units = units.reverse();
+    if (a >= 1e36) {
+      return a.toPrecision(3);
+    }
+    for (const unit of units) {
+      if (a >= unit.value) {
+        return (a / unit.value).toPrecision(3) + " " + unit.suffix;
+      }
     }
     return a.toLocaleString(void 0, { maximumFractionDigits: 0 });
   },
@@ -15800,8 +15834,8 @@ class Game {
      * When `coins.value` changes, Vue automatically knows to re-render parts of the UI that depend on it.
      */
     __publicField(this, "coins", ref(Config.startCoins));
-    __publicField(this, "coinsRef", ref(styler.writeNumber(this.coins.value)));
-    __publicField(this, "dimensions", ref(new Array(8).fill(0)));
+    __publicField(this, "dimensions", reactive(new Array(8).fill(0)));
+    __publicField(this, "dimBought", reactive(new Array(8).fill(0)));
     // dimRef = reactive(new Array(8));
     __publicField(this, "time", -1);
     /**
@@ -15835,18 +15869,28 @@ class Game {
   }
   update(dt) {
     dt = Math.min(dt, 60 * 60 * 24);
-    this.coins.value += this.dimensions.value[0] * dt;
-    this.coinsRef.value = styler.writeNumber(this.coins.value);
+    this.coins.value += this.dimensions[0] * dt;
+    for (let i = this.dimensions.length - 1; i > 0; i--) {
+      this.dimensions[i - 1] += this.dimensions[i] * dt;
+    }
   }
-  calculateDimensionCost() {
-    return ref(Math.round(Config.baseDimCost * Math.pow(Config.scale, this.dimensions.value[0])));
+  calculateDimensionCost(i) {
+    return Math.round(Config.baseDimCost * Math.pow(Config.scale, this.dimBought[i]));
   }
-  buyDimension() {
-    const nextCost = this.calculateDimensionCost().value;
-    if (this.coins.value >= nextCost) {
-      this.dimensions.value[0]++;
+  canBuyDimension(i) {
+    const nextCost = this.calculateDimensionCost(i);
+    return this.coins.value >= nextCost;
+  }
+  buyDimension(i) {
+    const nextCost = this.calculateDimensionCost(i);
+    if (this.canBuyDimension(i)) {
+      this.dimensions[i]++;
+      this.dimBought[i]++;
       this.coins.value -= nextCost;
     }
+  }
+  getCoins() {
+    return styler.writeNumber(this.coins.value);
   }
   // getDim(d: number) {
   //     // d is integer
@@ -15903,8 +15947,10 @@ const _sfc_main$4 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _hoisted_1$3 = { class: "flex w-full items-center justify-between p-4 shadow-lg rounded-xl mb-4 max-w-3xl mx-auto" };
+const _hoisted_1$3 = { class: "flex w-full items-center p-2 rounded-lg bg-gradient-to-r from-blue-700/30 via-purple-700/30 to-blue-700/30 rounded-lg mb-3" };
 const _hoisted_2$3 = { class: "flex-2 text-lg font-semibold" };
+const _hoisted_3$3 = { class: "flex-1 text-lg font-semibold" };
+const _hoisted_4$3 = { class: "number-display" };
 const _sfc_main$3 = {
   __name: "DimensionsRow",
   props: {
@@ -15922,60 +15968,49 @@ const _sfc_main$3 = {
     return (_ctx, _cache) => {
       return openBlock(), createElementBlock("div", _hoisted_1$3, [
         createBaseVNode("div", _hoisted_2$3, [
-          _cache[0] || (_cache[0] = createBaseVNode("span", null, " number of dimensions ", -1)),
-          _cache[1] || (_cache[1] = createTextVNode()),
-          createBaseVNode("span", null, toDisplayString(unref(styler).endInt(__props.dimension)), 1),
-          _cache[2] || (_cache[2] = createTextVNode(" Antimatter Dimension "))
+          createBaseVNode("span", null, toDisplayString(unref(styler).endInt(__props.dimension + 1)), 1),
+          _cache[0] || (_cache[0] = createTextVNode(" Antimatter Dimension "))
+        ]),
+        createBaseVNode("div", _hoisted_3$3, [
+          createBaseVNode("span", _hoisted_4$3, toDisplayString(unref(styler).writeNumber(unref(game).dimensions[__props.dimension])), 1),
+          createTextVNode(" [" + toDisplayString(unref(styler).writeNumber(unref(game).dimBought[__props.dimension])) + "] ", 1)
         ]),
         createBaseVNode("button", {
           onClick: handleButtonClick,
-          class: "flex-1 px-6 py-2 bg-blue-600 text-white font-bold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 transition duration-300 ease-in-out transform hover:scale-105"
-        }, " Buy Another Dimension ")
+          class: "flex-2 px-6 py-2 bg-blue-600 text-white font-bold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 transition duration-300 ease-in-out transform hover:scale-105"
+        }, [
+          _cache[1] || (_cache[1] = createTextVNode(" Buy Another Dimension for ")),
+          createBaseVNode("span", null, toDisplayString(unref(styler).writeNumber(unref(game).calculateDimensionCost(__props.dimension))), 1)
+        ]),
+        _cache[2] || (_cache[2] = createBaseVNode("p", null, null, -1))
       ]);
     };
   }
 };
-const _hoisted_1$2 = { class: "h-full flex flex-col items-center justify-top" };
+const _hoisted_1$2 = { class: "h-full flex flex-col items-center justify-start" };
 const _hoisted_2$2 = { class: "mb-8" };
-const _hoisted_3$2 = { class: "font-extrabold text-yellow-300 number-display" };
-const _hoisted_4$2 = { class: "text-3xl mb-8" };
-const _hoisted_5$1 = { class: "font-extrabold text-yellow-300" };
-const _hoisted_6 = { class: "font-extrabold" };
+const _hoisted_3$2 = { class: "font-extrabold text-yellow-300 number-display large" };
+const _hoisted_4$2 = { class: "flex-1 min-h-0 w-full flex-col items-center justify-between p-4 shadow-lg rounded-xl mb-4 mx-auto overflow-y-auto" };
 const _sfc_main$2 = {
   __name: "Resources",
   setup(__props) {
     return (_ctx, _cache) => {
       return openBlock(), createElementBlock("div", _hoisted_1$2, [
-        _cache[6] || (_cache[6] = createBaseVNode("h1", { class: "text-5xl font-bold mb-6 text-shadow-lg" }, " Vue Idle Clicker ", -1)),
+        _cache[2] || (_cache[2] = createBaseVNode("h1", { class: "text-5xl font-bold mb-6 text-shadow-lg" }, " Vue Idle Clicker ", -1)),
         createBaseVNode("p", _hoisted_2$2, [
-          _cache[1] || (_cache[1] = createTextVNode(" You have ")),
-          createBaseVNode("span", _hoisted_3$2, toDisplayString(unref(styler).writeNumber(unref(game).coins.value)), 1),
-          _cache[2] || (_cache[2] = createTextVNode(" antimatter. "))
+          _cache[0] || (_cache[0] = createTextVNode(" You have ")),
+          createBaseVNode("span", _hoisted_3$2, toDisplayString(unref(game).getCoins()), 1),
+          _cache[1] || (_cache[1] = createTextVNode(" antimatter. "))
         ]),
-        createBaseVNode("p", _hoisted_4$2, [
-          _cache[3] || (_cache[3] = createTextVNode(" Dimensions: ")),
-          createBaseVNode("span", _hoisted_5$1, toDisplayString(unref(game).dimensions.value[0]), 1)
-        ]),
-        createVNode(_sfc_main$4, {
-          onClick: _cache[0] || (_cache[0] = ($event) => unref(game).buyDimension())
-        }, {
-          default: withCtx(() => [
-            createBaseVNode("p", null, [
-              _cache[4] || (_cache[4] = createTextVNode(" Buy 1 for ")),
-              createBaseVNode("span", _hoisted_6, toDisplayString(unref(game).calculateDimensionCost().value.toLocaleString()), 1),
-              _cache[5] || (_cache[5] = createTextVNode(" antimatter "))
-            ])
-          ]),
-          _: 1
-        }),
-        createVNode(_sfc_main$3, {
-          dimension: 1,
-          "on-buy-click": () => unref(game).buyDimension()
-        }, null, 8, ["on-buy-click"]),
-        createVNode(_sfc_main$3, {
-          dimension: 2,
-          "on-buy-click": () => unref(game).buyDimension()
-        }, null, 8, ["on-buy-click"])
+        createBaseVNode("div", _hoisted_4$2, [
+          (openBlock(), createElementBlock(Fragment, null, renderList(8, (i) => {
+            return createVNode(_sfc_main$3, {
+              key: i,
+              dimension: i - 1,
+              "on-buy-click": () => unref(game).buyDimension(i - 1)
+            }, null, 8, ["dimension", "on-buy-click"]);
+          }), 64))
+        ])
       ]);
     };
   }
@@ -15993,11 +16028,11 @@ const _sfc_main$1 = /* @__PURE__ */ defineComponent({
         _cache[4] || (_cache[4] = createBaseVNode("h1", { class: "text-5xl font-bold mb-6 text-shadow-lg" }, "Upgrades", -1)),
         createBaseVNode("p", _hoisted_2$1, [
           _cache[1] || (_cache[1] = createTextVNode("Coins: ")),
-          createBaseVNode("span", _hoisted_3$1, toDisplayString(unref(game).coinsRef), 1)
+          createBaseVNode("span", _hoisted_3$1, toDisplayString(unref(game).getCoins()), 1)
         ]),
         createBaseVNode("p", _hoisted_4$1, [
           _cache[2] || (_cache[2] = createTextVNode("Dimensions: ")),
-          createBaseVNode("span", _hoisted_5, toDisplayString(unref(game).dimensions.value[0]), 1)
+          createBaseVNode("span", _hoisted_5, toDisplayString(unref(game).dimensions[0]), 1)
         ]),
         createVNode(_sfc_main$4, {
           onClick: _cache[0] || (_cache[0] = () => {
