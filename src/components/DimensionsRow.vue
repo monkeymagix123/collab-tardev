@@ -1,7 +1,7 @@
 <template>
   <!-- <div class="flex w-full items-center justify-between p-4 shadow-lg rounded-xl mb-4 mx-auto"> -->
   <!-- <div class="flex w-full items-center p-2 rounded-lg border border-gray-300"> -->
-  <div class="flex w-full items-center p-2 rounded-lg  bg-gradient-to-r from-blue-700/50 via-purple-700/50 to-blue-700/50 border border-gray-700 rounded-lg mb-3">
+  <div class="flex w-full items-center p-2 rounded-lg  bg-gradient-to-r from-blue-700/30 via-purple-700/30 to-blue-700/30  rounded-lg mb-3">
     <div class="flex-2 text-lg font-semibold">
         <span>{{ styler.endInt(dimension + 1) }}</span> Antimatter Dimension
     </div>

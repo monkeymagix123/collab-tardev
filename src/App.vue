@@ -1,5 +1,5 @@
 <template>
-    <div class="flex min-h-screen p-4">
+    <div class="flex h-screen p-4">
         <!-- Tabs -->
         <div class="w-48 bg-gradient-to-b from-blue-700 via-purple-700 to-blue-800 border-r border-white/20">
         <ul>
