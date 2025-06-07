@@ -9,9 +9,9 @@ export class Game {
      * When `coins.value` changes, Vue automatically knows to re-render parts of the UI that depend on it.
      */
     coins = ref(Config.startCoins);
-    coinsRef = ref(styler.writeNumber(this.coins.value));
 
-    dimensions = ref(new Array(8).fill(0));
+    dimensions = reactive(new Array(8).fill(0));
+    dimBought = reactive(new Array(8).fill(0));
     // dimRef = reactive(new Array(8));
 
     time: number = -1;
@@ -63,21 +63,35 @@ export class Game {
         // cap 24 hrs offline time
         dt = Math.min(dt, 60 * 60 * 24);
 
-        this.coins.value += this.dimensions.value[0] * dt;
-        // this.coinsRef.value = this.coins.toPrecision(3);
-        this.coinsRef.value = styler.writeNumber(this.coins.value);
+        this.coins.value += this.dimensions[0] * dt;
+        // reverse ig
+        // Iterate backwards from the second-highest dimension (index 7) down to the second dimension (index 1)
+        for (let i = this.dimensions.length - 1; i > 0; i--) {
+            // Each dimension produces the one below it
+            this.dimensions[i - 1] += this.dimensions[i] * dt;
+        }
     }
 
-    calculateDimensionCost() {
-        return ref(Math.round(Config.baseDimCost * Math.pow(Config.scale, this.dimensions.value[0])));
+    calculateDimensionCost (i: number) {
+        return Math.round(Config.baseDimCost * Math.pow(Config.scale, this.dimBought[i]));
     }
 
-    buyDimension() {
-        const nextCost = this.calculateDimensionCost().value;
-        if (this.coins.value >= nextCost) {
-            this.dimensions.value[0]++;
+    canBuyDimension(i: number) {
+        const nextCost = this.calculateDimensionCost(i);
+        return (this.coins.value >= nextCost);
+    }
+
+    buyDimension(i: number) {
+        const nextCost = this.calculateDimensionCost(i);
+        if (this.canBuyDimension(i)) {
+            this.dimensions[i]++;
+            this.dimBought[i]++;
             this.coins.value -= nextCost;
         }
+    }
+
+    getCoins() {
+        return styler.writeNumber(this.coins.value);
     }
 
     // getDim(d: number) {
