@@ -15950,7 +15950,11 @@ const _sfc_main$4 = /* @__PURE__ */ defineComponent({
 const _hoisted_1$3 = { class: "flex w-full items-center p-2 rounded-lg bg-gradient-to-r from-blue-700/30 via-purple-700/30 to-blue-700/30 rounded-lg mb-3" };
 const _hoisted_2$3 = { class: "flex-2 text-lg font-semibold" };
 const _hoisted_3$3 = { class: "flex-1 text-lg font-semibold" };
-const _hoisted_4$3 = { class: "number-display" };
+const _hoisted_4$2 = { class: "number-display" };
+const _hoisted_5 = { class: "group relative inline-block" };
+const _hoisted_6 = ["disabled"];
+const _hoisted_7 = { class: "opacity-0 z-50 group-hover:opacity-100 absolute top-full left-1/2 -translate-x-1/2 mt-2 w-max p-2 bg-black text-white text-sm rounded-md transition-opacity duration-300 pointer-events-none" };
+const _hoisted_8 = { class: "number-display" };
 const _sfc_main$3 = {
   __name: "DimensionsRow",
   props: {
@@ -15972,17 +15976,25 @@ const _sfc_main$3 = {
           _cache[0] || (_cache[0] = createTextVNode(" Antimatter Dimension "))
         ]),
         createBaseVNode("div", _hoisted_3$3, [
-          createBaseVNode("span", _hoisted_4$3, toDisplayString(unref(styler).writeNumber(unref(game).dimensions[__props.dimension])), 1),
+          createBaseVNode("span", _hoisted_4$2, toDisplayString(unref(styler).writeNumber(unref(game).dimensions[__props.dimension])), 1),
           createTextVNode(" [" + toDisplayString(unref(styler).writeNumber(unref(game).dimBought[__props.dimension])) + "] ", 1)
         ]),
-        createBaseVNode("button", {
-          onClick: handleButtonClick,
-          class: "flex-2 px-6 py-2 bg-blue-600 text-white font-bold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 transition duration-300 ease-in-out transform hover:scale-105"
-        }, [
-          _cache[1] || (_cache[1] = createTextVNode(" Buy Another Dimension for ")),
-          createBaseVNode("span", null, toDisplayString(unref(styler).writeNumber(unref(game).calculateDimensionCost(__props.dimension))), 1)
+        createBaseVNode("div", _hoisted_5, [
+          createBaseVNode("button", {
+            onClick: handleButtonClick,
+            class: normalizeClass(["flex-2 px-6 py-2 text-white font-bold rounded-lg shadow-md", unref(game).canBuyDimension(__props.dimension) ? "bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 transition duration-300 ease-in-out transform hover:scale-105" : "bg-blue-800/70"]),
+            disabled: !unref(game).canBuyDimension(__props.dimension)
+          }, [
+            _cache[1] || (_cache[1] = createTextVNode(" Buy Another Dimension for ")),
+            createBaseVNode("span", null, toDisplayString(unref(styler).writeNumber(unref(game).calculateDimensionCost(__props.dimension))), 1)
+          ], 10, _hoisted_6),
+          createBaseVNode("div", _hoisted_7, [
+            _cache[2] || (_cache[2] = createTextVNode(" Purchased ")),
+            createBaseVNode("span", _hoisted_8, toDisplayString(unref(game).dimBought[__props.dimension]), 1),
+            _cache[3] || (_cache[3] = createTextVNode(" times "))
+          ])
         ]),
-        _cache[2] || (_cache[2] = createBaseVNode("p", null, null, -1))
+        _cache[4] || (_cache[4] = createBaseVNode("p", null, null, -1))
       ]);
     };
   }
@@ -15990,7 +16002,7 @@ const _sfc_main$3 = {
 const _hoisted_1$2 = { class: "h-full flex flex-col items-center justify-start" };
 const _hoisted_2$2 = { class: "mb-8" };
 const _hoisted_3$2 = { class: "font-extrabold text-yellow-300 number-display large" };
-const _hoisted_4$2 = { class: "flex-1 min-h-0 w-full flex-col items-center justify-between p-4 shadow-lg rounded-xl mb-4 mx-auto overflow-y-auto" };
+const _hoisted_4$1 = { class: "flex-1 min-h-0 w-full flex-col items-center justify-between p-4 shadow-lg rounded-xl mb-4 mx-auto overflow-y-auto" };
 const _sfc_main$2 = {
   __name: "Resources",
   setup(__props) {
@@ -16002,7 +16014,7 @@ const _sfc_main$2 = {
           createBaseVNode("span", _hoisted_3$2, toDisplayString(unref(game).getCoins()), 1),
           _cache[1] || (_cache[1] = createTextVNode(" antimatter. "))
         ]),
-        createBaseVNode("div", _hoisted_4$2, [
+        createBaseVNode("div", _hoisted_4$1, [
           (openBlock(), createElementBlock(Fragment, null, renderList(8, (i) => {
             return createVNode(_sfc_main$3, {
               key: i,
@@ -16018,31 +16030,25 @@ const _sfc_main$2 = {
 const _hoisted_1$1 = { class: "h-full flex flex-col items-center justify-center" };
 const _hoisted_2$1 = { class: "text-3xl mb-8" };
 const _hoisted_3$1 = { class: "font-extrabold text-yellow-300 number-display" };
-const _hoisted_4$1 = { class: "text-3xl mb-8" };
-const _hoisted_5 = { class: "font-extrabold text-yellow-300" };
 const _sfc_main$1 = /* @__PURE__ */ defineComponent({
   __name: "Science",
   setup(__props) {
     return (_ctx, _cache) => {
       return openBlock(), createElementBlock("div", _hoisted_1$1, [
-        _cache[4] || (_cache[4] = createBaseVNode("h1", { class: "text-5xl font-bold mb-6 text-shadow-lg" }, "Upgrades", -1)),
+        _cache[3] || (_cache[3] = createBaseVNode("h1", { class: "text-5xl font-bold mb-6 text-shadow-lg" }, "Upgrades", -1)),
         createBaseVNode("p", _hoisted_2$1, [
           _cache[1] || (_cache[1] = createTextVNode("Coins: ")),
           createBaseVNode("span", _hoisted_3$1, toDisplayString(unref(game).getCoins()), 1)
-        ]),
-        createBaseVNode("p", _hoisted_4$1, [
-          _cache[2] || (_cache[2] = createTextVNode("Dimensions: ")),
-          createBaseVNode("span", _hoisted_5, toDisplayString(unref(game).dimensions[0]), 1)
         ]),
         createVNode(_sfc_main$4, {
           onClick: _cache[0] || (_cache[0] = () => {
           })
         }, {
-          default: withCtx(() => _cache[3] || (_cache[3] = [
+          default: withCtx(() => _cache[2] || (_cache[2] = [
             createTextVNode(" hi ")
           ])),
           _: 1,
-          __: [3]
+          __: [2]
         })
       ]);
     };
