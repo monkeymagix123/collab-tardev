@@ -15951,7 +15951,7 @@ const _hoisted_1$3 = { class: "flex w-full items-center p-2 rounded-lg bg-gradie
 const _hoisted_2$3 = { class: "flex-2 text-lg font-semibold" };
 const _hoisted_3$3 = { class: "flex-1 text-lg font-semibold" };
 const _hoisted_4$2 = { class: "number-display" };
-const _hoisted_5 = { class: "group relative inline-block" };
+const _hoisted_5 = { class: "flex-2 group relative inline-block" };
 const _hoisted_6 = ["disabled"];
 const _hoisted_7 = { class: "opacity-0 z-50 group-hover:opacity-100 absolute top-full left-1/2 -translate-x-1/2 mt-2 w-max p-2 bg-black text-white text-sm rounded-md transition-opacity duration-300 pointer-events-none" };
 const _hoisted_8 = { class: "number-display" };
@@ -15982,7 +15982,7 @@ const _sfc_main$3 = {
         createBaseVNode("div", _hoisted_5, [
           createBaseVNode("button", {
             onClick: handleButtonClick,
-            class: normalizeClass(["flex-2 px-6 py-2 text-white font-bold rounded-lg shadow-md", unref(game).canBuyDimension(__props.dimension) ? "bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 transition duration-300 ease-in-out transform hover:scale-105" : "bg-blue-800/70"]),
+            class: normalizeClass(["w-full px-6 py-2 text-white font-bold rounded-lg shadow-md", unref(game).canBuyDimension(__props.dimension) ? "bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 transition duration-300 ease-in-out transform hover:scale-105" : "bg-blue-800/70"]),
             disabled: !unref(game).canBuyDimension(__props.dimension)
           }, [
             _cache[1] || (_cache[1] = createTextVNode(" Buy Another Dimension for ")),
