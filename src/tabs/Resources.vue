@@ -1,7 +1,7 @@
 <template>
   <div class="h-full flex flex-col items-center justify-start">
     <h1 class="text-5xl font-bold mb-6 text-shadow-lg">
-      Vue Idle Clicker
+      Idle Clicker
     </h1>
     <p class="mb-8">
       You have
