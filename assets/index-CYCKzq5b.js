@@ -16008,7 +16008,7 @@ const _sfc_main$2 = {
   setup(__props) {
     return (_ctx, _cache) => {
       return openBlock(), createElementBlock("div", _hoisted_1$2, [
-        _cache[2] || (_cache[2] = createBaseVNode("h1", { class: "text-5xl font-bold mb-6 text-shadow-lg" }, " Vue Idle Clicker ", -1)),
+        _cache[2] || (_cache[2] = createBaseVNode("h1", { class: "text-5xl font-bold mb-6 text-shadow-lg" }, " Idle Clicker ", -1)),
         createBaseVNode("p", _hoisted_2$2, [
           _cache[0] || (_cache[0] = createTextVNode(" You have ")),
           createBaseVNode("span", _hoisted_3$2, toDisplayString(unref(game).getCoins()), 1),
