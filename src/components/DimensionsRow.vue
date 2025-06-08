@@ -8,10 +8,10 @@
     <div class="flex-1 text-lg font-semibold">
       <span class="number-display"> {{ styler.writeNumber(game.dimensions[dimension]) }} </span> [{{ styler.writeNumber(game.dimBought[dimension]) }}]
     </div>
-    <div class="group relative inline-block">
+    <div class="flex-2 group relative inline-block">
       <button
         @click="handleButtonClick"
-        class="flex-2 px-6 py-2 text-white font-bold rounded-lg shadow-md"
+        class="w-full px-6 py-2 text-white font-bold rounded-lg shadow-md"
         v-bind:disabled="!game.canBuyDimension(dimension)"
         v-bind:class="game.canBuyDimension(dimension) ? 'bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 transition duration-300 ease-in-out transform hover:scale-105' : 'bg-blue-800/70'"
       >
