@@ -104,6 +104,21 @@ export class Game {
         localStorage.setItem("saveData", JSON.stringify(this.getSave()));
     }
 
+    exportSave() {
+        // const s = Buffer.from(JSON.stringify(this.getSave())).toString("base64");
+        const json = JSON.stringify(this.getSave());
+        const utf8Bytes = new TextEncoder().encode(json);
+        const base64 = btoa(String.fromCharCode(...utf8Bytes));
+        return base64;
+    }
+
+    importSave(base64: string) {
+        const binary = atob(base64);
+        const bytes = Uint8Array.from(binary, char => char.charCodeAt(0));
+        const json = new TextDecoder().decode(bytes);
+        return JSON.parse(json);
+    }
+
     getSave(): Record<string, any> {
         const result: Record<string, any> = {};
         for (const key in this) {

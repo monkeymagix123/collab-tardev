@@ -5,8 +5,12 @@
 
         <!-- <p class="text-3xl mb-8">Dimensions: <span class="font-extrabold text-yellow-300">{{ game.dimensions[0] }}</span></p> -->
 
-        <YellowButton @click="() => { game.save(); showSaveNotification() }">
-          Save
+        <YellowButton @click="() => { game.save(); showNotif() }">
+            Save
+        </YellowButton>
+
+        <YellowButton @click="exportSave">
+            Export
         </YellowButton>
 
         <Notification ref="notificationRef" />
@@ -31,13 +35,26 @@
     //     }
     // };
 
-    function showSaveNotification() {
+    function showNotif(s: string = 'Game saved!') {
         if (notificationRef.value) {
             notificationRef.value.showNotification({
-                title: 'Game saved!',
+                title: s,
                 message: '',
                 duration: 3000 // 3 seconds
             });
         }
     };
+
+    async function exportSave(): Promise<void> {
+        try {
+            const save = game.exportSave();
+            navigator.clipboard.writeText(save);
+        
+            // show notification
+            showNotif('Save copied to clipboard!');
+        } catch (err) {
+            console.error('Failed to copy text: ', err);
+            showNotif('Failed to save');
+        }
+    }
 </script>
