@@ -30,6 +30,7 @@
     // Import the tab content components
     import Resources from './tabs/Resources.vue'
     import Science from './tabs/Science.vue'
+    import Options from './tabs/Options.vue'
 
     // Define tab metadata
     interface TabItem {
@@ -41,6 +42,7 @@
     const tabs: TabItem[] = [
         { name: 'resources', label: 'Resources', component: Resources },
         { name: 'science', label: 'Science', component: Science },
+        { name: 'options', label: 'Options', component: Options },
     ]
 
     const activeTab = ref(tabs[0].name);
