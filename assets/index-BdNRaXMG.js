@@ -15930,7 +15930,7 @@ const game = new Game();
 const __default__ = {
   name: "YellowButton"
 };
-const _sfc_main$4 = /* @__PURE__ */ defineComponent({
+const _sfc_main$6 = /* @__PURE__ */ defineComponent({
   ...__default__,
   emits: ["click"],
   setup(__props, { emit: __emit }) {
@@ -15947,15 +15947,15 @@ const _sfc_main$4 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _hoisted_1$3 = { class: "flex w-full items-center p-2 rounded-lg bg-gradient-to-r from-blue-700/30 via-purple-700/30 to-blue-700/30 rounded-lg mb-3" };
-const _hoisted_2$3 = { class: "flex-2 text-lg font-semibold" };
-const _hoisted_3$3 = { class: "flex-1 text-lg font-semibold" };
+const _hoisted_1$5 = { class: "flex w-full items-center p-2 rounded-lg bg-gradient-to-r from-blue-700/30 via-purple-700/30 to-blue-700/30 rounded-lg mb-3" };
+const _hoisted_2$5 = { class: "flex-2 text-lg font-semibold" };
+const _hoisted_3$5 = { class: "flex-1 text-lg font-semibold" };
 const _hoisted_4$2 = { class: "number-display" };
 const _hoisted_5 = { class: "flex-2 group relative inline-block" };
 const _hoisted_6 = ["disabled"];
 const _hoisted_7 = { class: "opacity-0 z-50 group-hover:opacity-100 absolute top-full left-1/2 -translate-x-1/2 mt-2 w-max p-2 bg-black text-white text-sm rounded-md transition-opacity duration-300 pointer-events-none" };
 const _hoisted_8 = { class: "number-display" };
-const _sfc_main$3 = {
+const _sfc_main$5 = {
   __name: "DimensionsRow",
   props: {
     dimension: Number,
@@ -15970,12 +15970,12 @@ const _sfc_main$3 = {
       }
     };
     return (_ctx, _cache) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$3, [
-        createBaseVNode("div", _hoisted_2$3, [
+      return openBlock(), createElementBlock("div", _hoisted_1$5, [
+        createBaseVNode("div", _hoisted_2$5, [
           createBaseVNode("span", null, toDisplayString(unref(styler).endInt(__props.dimension + 1)), 1),
           _cache[0] || (_cache[0] = createTextVNode(" Antimatter Dimension "))
         ]),
-        createBaseVNode("div", _hoisted_3$3, [
+        createBaseVNode("div", _hoisted_3$5, [
           createBaseVNode("span", _hoisted_4$2, toDisplayString(unref(styler).writeNumber(unref(game).dimensions[__props.dimension])), 1),
           createTextVNode(" [" + toDisplayString(unref(styler).writeNumber(unref(game).dimBought[__props.dimension])) + "] ", 1)
         ]),
@@ -15999,24 +15999,24 @@ const _sfc_main$3 = {
     };
   }
 };
-const _hoisted_1$2 = { class: "h-full flex flex-col items-center justify-start" };
-const _hoisted_2$2 = { class: "mb-8" };
-const _hoisted_3$2 = { class: "font-extrabold text-yellow-300 number-display large" };
+const _hoisted_1$4 = { class: "h-full flex flex-col items-center justify-start" };
+const _hoisted_2$4 = { class: "mb-8" };
+const _hoisted_3$4 = { class: "font-extrabold text-yellow-300 number-display large" };
 const _hoisted_4$1 = { class: "flex-1 min-h-0 w-full flex-col items-center justify-between p-4 shadow-lg rounded-xl mb-4 mx-auto overflow-y-auto" };
-const _sfc_main$2 = {
+const _sfc_main$4 = {
   __name: "Resources",
   setup(__props) {
     return (_ctx, _cache) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$2, [
+      return openBlock(), createElementBlock("div", _hoisted_1$4, [
         _cache[2] || (_cache[2] = createBaseVNode("h1", { class: "text-5xl font-bold mb-6 text-shadow-lg" }, " Idle Clicker ", -1)),
-        createBaseVNode("p", _hoisted_2$2, [
+        createBaseVNode("p", _hoisted_2$4, [
           _cache[0] || (_cache[0] = createTextVNode(" You have ")),
-          createBaseVNode("span", _hoisted_3$2, toDisplayString(unref(game).getCoins()), 1),
+          createBaseVNode("span", _hoisted_3$4, toDisplayString(unref(game).getCoins()), 1),
           _cache[1] || (_cache[1] = createTextVNode(" antimatter. "))
         ]),
         createBaseVNode("div", _hoisted_4$1, [
           (openBlock(), createElementBlock(Fragment, null, renderList(8, (i) => {
-            return createVNode(_sfc_main$3, {
+            return createVNode(_sfc_main$5, {
               key: i,
               dimension: i - 1,
               "on-buy-click": () => unref(game).buyDimension(i - 1)
@@ -16027,20 +16027,20 @@ const _sfc_main$2 = {
     };
   }
 };
-const _hoisted_1$1 = { class: "h-full flex flex-col items-center justify-center" };
-const _hoisted_2$1 = { class: "text-3xl mb-8" };
-const _hoisted_3$1 = { class: "font-extrabold text-yellow-300 number-display" };
-const _sfc_main$1 = /* @__PURE__ */ defineComponent({
+const _hoisted_1$3 = { class: "h-full flex flex-col items-center justify-center" };
+const _hoisted_2$3 = { class: "text-3xl mb-8" };
+const _hoisted_3$3 = { class: "font-extrabold text-yellow-300 number-display" };
+const _sfc_main$3 = /* @__PURE__ */ defineComponent({
   __name: "Science",
   setup(__props) {
     return (_ctx, _cache) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$1, [
+      return openBlock(), createElementBlock("div", _hoisted_1$3, [
         _cache[3] || (_cache[3] = createBaseVNode("h1", { class: "text-5xl font-bold mb-6 text-shadow-lg" }, "Upgrades", -1)),
-        createBaseVNode("p", _hoisted_2$1, [
+        createBaseVNode("p", _hoisted_2$3, [
           _cache[1] || (_cache[1] = createTextVNode("Coins: ")),
-          createBaseVNode("span", _hoisted_3$1, toDisplayString(unref(game).getCoins()), 1)
+          createBaseVNode("span", _hoisted_3$3, toDisplayString(unref(game).getCoins()), 1)
         ]),
-        createVNode(_sfc_main$4, {
+        createVNode(_sfc_main$6, {
           onClick: _cache[0] || (_cache[0] = () => {
           })
         }, {
@@ -16054,6 +16054,163 @@ const _sfc_main$1 = /* @__PURE__ */ defineComponent({
     };
   }
 });
+const _export_sfc = (sfc, props) => {
+  const target = sfc.__vccOpts || sfc;
+  for (const [key, val] of props) {
+    target[key] = val;
+  }
+  return target;
+};
+const _hoisted_1$2 = {
+  key: 0,
+  class: "fixed bottom-4 right-4 bg-green-500 text-white p-4 rounded-lg shadow-lg flex items-center space-x-3 z-50"
+};
+const _hoisted_2$2 = { class: "font-semibold" };
+const _hoisted_3$2 = { class: "text-sm" };
+const _sfc_main$2 = {
+  __name: "Notification",
+  props: {
+    title: String,
+    message: String,
+    duration: Number
+  },
+  setup(__props, { expose: __expose }) {
+    const props = __props;
+    const isVisible = ref(false);
+    const timeoutId = ref(null);
+    const currentTitle = ref(props.title);
+    const currentMessage = ref(props.message);
+    const currentDuration = ref(props.duration);
+    const showNotification = (options = {}) => {
+      currentTitle.value = options.title || props.title;
+      currentMessage.value = options.message || props.message;
+      currentDuration.value = options.duration !== void 0 ? options.duration : props.duration;
+      isVisible.value = true;
+      if (timeoutId.value) {
+        clearTimeout(timeoutId.value);
+      }
+      if (currentDuration.value > 0) {
+        timeoutId.value = setTimeout(() => {
+          hideNotification();
+        }, currentDuration.value);
+      }
+    };
+    const hideNotification = () => {
+      isVisible.value = false;
+      if (timeoutId.value) {
+        clearTimeout(timeoutId.value);
+        timeoutId.value = null;
+      }
+    };
+    onUnmounted(() => {
+      if (timeoutId.value) {
+        clearTimeout(timeoutId.value);
+      }
+    });
+    __expose({
+      showNotification,
+      hideNotification
+    });
+    return (_ctx, _cache) => {
+      return openBlock(), createBlock(Transition, {
+        "enter-active-class": "transition ease-out duration-300",
+        "enter-from-class": "opacity-0 translate-x-4",
+        "enter-to-class": "opacity-100 translate-x-0",
+        "leave-active-class": "transition ease-in duration-200",
+        "leave-from-class": "opacity-100 translate-x-0",
+        "leave-to-class": "opacity-0 translate-x-4"
+      }, {
+        default: withCtx(() => [
+          isVisible.value ? (openBlock(), createElementBlock("div", _hoisted_1$2, [
+            _cache[1] || (_cache[1] = createBaseVNode("svg", {
+              class: "h-6 w-6",
+              fill: "none",
+              stroke: "currentColor",
+              viewBox: "0 0 24 24",
+              xmlns: "http://www.w3.org/2000/svg"
+            }, [
+              createBaseVNode("path", {
+                "stroke-linecap": "round",
+                "stroke-linejoin": "round",
+                "stroke-width": "2",
+                d: "M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+              })
+            ], -1)),
+            createBaseVNode("div", null, [
+              createBaseVNode("p", _hoisted_2$2, toDisplayString(currentTitle.value), 1),
+              createBaseVNode("p", _hoisted_3$2, toDisplayString(currentMessage.value), 1)
+            ]),
+            createBaseVNode("button", {
+              onClick: hideNotification,
+              class: "ml-4 text-white hover:text-green-100"
+            }, _cache[0] || (_cache[0] = [
+              createBaseVNode("svg", {
+                class: "h-5 w-5",
+                fill: "none",
+                stroke: "currentColor",
+                viewBox: "0 0 24 24",
+                xmlns: "http://www.w3.org/2000/svg"
+              }, [
+                createBaseVNode("path", {
+                  "stroke-linecap": "round",
+                  "stroke-linejoin": "round",
+                  "stroke-width": "2",
+                  d: "M6 18L18 6M6 6l12 12"
+                })
+              ], -1)
+            ]))
+          ])) : createCommentVNode("", true)
+        ]),
+        _: 1
+      });
+    };
+  }
+};
+const Notification = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["__scopeId", "data-v-cc234781"]]);
+const _hoisted_1$1 = { class: "h-full flex flex-col items-center justify-center" };
+const _hoisted_2$1 = { class: "text-3xl mb-8" };
+const _hoisted_3$1 = { class: "font-extrabold text-yellow-300 number-display" };
+const notificationRef = ref(null);
+function showSaveNotification() {
+  if (notificationRef.value) {
+    notificationRef.value.showNotification({
+      title: "Game saved!",
+      message: "",
+      duration: 3e3
+      // 3 seconds
+    });
+  }
+}
+const _sfc_main$1 = /* @__PURE__ */ defineComponent({
+  __name: "Options",
+  setup(__props) {
+    return (_ctx, _cache) => {
+      return openBlock(), createElementBlock("div", _hoisted_1$1, [
+        _cache[3] || (_cache[3] = createBaseVNode("h1", { class: "text-5xl font-bold mb-6 text-shadow-lg" }, "Upgrades", -1)),
+        createBaseVNode("p", _hoisted_2$1, [
+          _cache[1] || (_cache[1] = createTextVNode("Coins: ")),
+          createBaseVNode("span", _hoisted_3$1, toDisplayString(unref(game).getCoins()), 1)
+        ]),
+        createVNode(_sfc_main$6, {
+          onClick: _cache[0] || (_cache[0] = () => {
+            unref(game).save();
+            showSaveNotification();
+          })
+        }, {
+          default: withCtx(() => _cache[2] || (_cache[2] = [
+            createTextVNode(" Save ")
+          ])),
+          _: 1,
+          __: [2]
+        }),
+        createVNode(Notification, {
+          ref_key: "notificationRef",
+          ref: notificationRef
+        }, null, 512)
+      ]);
+    };
+  }
+});
 const _hoisted_1 = { class: "flex h-screen p-4" };
 const _hoisted_2 = { class: "w-48 bg-gradient-to-b from-blue-700 via-purple-700 to-blue-800 border-r border-white/20" };
 const _hoisted_3 = ["onClick"];
@@ -16062,8 +16219,9 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
   __name: "App",
   setup(__props) {
     const tabs = [
-      { name: "resources", label: "Resources", component: _sfc_main$2 },
-      { name: "science", label: "Science", component: _sfc_main$1 }
+      { name: "resources", label: "Resources", component: _sfc_main$4 },
+      { name: "science", label: "Science", component: _sfc_main$3 },
+      { name: "options", label: "Options", component: _sfc_main$1 }
     ];
     const activeTab = ref(tabs[0].name);
     const currentComponent = computed(() => {
@@ -16093,13 +16251,6 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _export_sfc = (sfc, props) => {
-  const target = sfc.__vccOpts || sfc;
-  for (const [key, val] of props) {
-    target[key] = val;
-  }
-  return target;
-};
-const App = /* @__PURE__ */ _export_sfc(_sfc_main, [["__scopeId", "data-v-b83c0b1f"]]);
+const App = /* @__PURE__ */ _export_sfc(_sfc_main, [["__scopeId", "data-v-a94d01cc"]]);
 const app = createApp(App);
 app.mount("#app");
