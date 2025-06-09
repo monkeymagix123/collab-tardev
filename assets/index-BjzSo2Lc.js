@@ -15900,6 +15900,18 @@ class Game {
   save() {
     localStorage.setItem("saveData", JSON.stringify(this.getSave()));
   }
+  exportSave() {
+    const json = JSON.stringify(this.getSave());
+    const utf8Bytes = new TextEncoder().encode(json);
+    const base64 = btoa(String.fromCharCode(...utf8Bytes));
+    return base64;
+  }
+  importSave(base64) {
+    const binary = atob(base64);
+    const bytes = Uint8Array.from(binary, (char) => char.charCodeAt(0));
+    const json = new TextDecoder().decode(bytes);
+    return JSON.parse(json);
+  }
   getSave() {
     const result = {};
     for (const key in this) {
@@ -16171,14 +16183,24 @@ const _hoisted_1$1 = { class: "h-full flex flex-col items-center justify-center"
 const _hoisted_2$1 = { class: "text-3xl mb-8" };
 const _hoisted_3$1 = { class: "font-extrabold text-yellow-300 number-display" };
 const notificationRef = ref(null);
-function showSaveNotification() {
+function showNotif(s = "Game saved!") {
   if (notificationRef.value) {
     notificationRef.value.showNotification({
-      title: "Game saved!",
+      title: s,
       message: "",
       duration: 3e3
       // 3 seconds
     });
+  }
+}
+async function exportSave() {
+  try {
+    const save = game.exportSave();
+    navigator.clipboard.writeText(save);
+    showNotif("Save copied to clipboard!");
+  } catch (err) {
+    console.error("Failed to copy text: ", err);
+    showNotif("Failed to save");
   }
 }
 const _sfc_main$1 = /* @__PURE__ */ defineComponent({
@@ -16186,7 +16208,7 @@ const _sfc_main$1 = /* @__PURE__ */ defineComponent({
   setup(__props) {
     return (_ctx, _cache) => {
       return openBlock(), createElementBlock("div", _hoisted_1$1, [
-        _cache[3] || (_cache[3] = createBaseVNode("h1", { class: "text-5xl font-bold mb-6 text-shadow-lg" }, "Upgrades", -1)),
+        _cache[4] || (_cache[4] = createBaseVNode("h1", { class: "text-5xl font-bold mb-6 text-shadow-lg" }, "Upgrades", -1)),
         createBaseVNode("p", _hoisted_2$1, [
           _cache[1] || (_cache[1] = createTextVNode("Coins: ")),
           createBaseVNode("span", _hoisted_3$1, toDisplayString(unref(game).getCoins()), 1)
@@ -16194,7 +16216,7 @@ const _sfc_main$1 = /* @__PURE__ */ defineComponent({
         createVNode(_sfc_main$6, {
           onClick: _cache[0] || (_cache[0] = () => {
             unref(game).save();
-            showSaveNotification();
+            showNotif();
           })
         }, {
           default: withCtx(() => _cache[2] || (_cache[2] = [
@@ -16202,6 +16224,13 @@ const _sfc_main$1 = /* @__PURE__ */ defineComponent({
           ])),
           _: 1,
           __: [2]
+        }),
+        createVNode(_sfc_main$6, { onClick: exportSave }, {
+          default: withCtx(() => _cache[3] || (_cache[3] = [
+            createTextVNode(" Export ")
+          ])),
+          _: 1,
+          __: [3]
         }),
         createVNode(Notification, {
           ref_key: "notificationRef",
