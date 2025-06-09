@@ -7,7 +7,11 @@
     leave-from-class="opacity-100 translate-x-0"
     leave-to-class="opacity-0 translate-x-full"
   >
-    <div :class="notificationClasses" class="w-full max-w-sm mx-auto mt-2 p-4 rounded-lg shadow-lg flex items-center space-x-3">
+    <div
+      :class="notificationClasses"
+      class="w-full max-w-sm mx-auto mt-2 p-4 rounded-lg shadow-lg flex items-center space-x-3 cursor-pointer"
+      @click="dismiss"
+    >
       <svg
         v-if="iconPath"
         class="h-6 w-6"
