@@ -21,11 +21,14 @@
         <div class="flex-1 p-6">
             <component :is="currentComponent" />
         </div>
+
+        <NotificationContainer />
     </div>
 </template>
 
 <script lang="ts" setup>
-    import { ref, computed } from 'vue'
+    import { ref, computed } from 'vue';
+    import NotificationContainer from './components/NotificationContainer.vue';
 
     // Import the tab content components
     import Resources from './tabs/Resources.vue'
@@ -48,7 +51,7 @@
     const activeTab = ref(tabs[0].name);
 
     const currentComponent = computed(() => {
-    return tabs.find(tab => tab.name === activeTab.value)?.component || null
+        return tabs.find(tab => tab.name === activeTab.value)?.component || null
     })
 </script>
 

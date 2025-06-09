@@ -2,6 +2,8 @@ import { createApp, ref, computed } from 'vue';
 
 import App from './App.vue';
 
+import { createPinia } from 'pinia';
+
 import './assets/style.css'
 
 /**
@@ -11,6 +13,9 @@ import './assets/style.css'
  * and methods that will be exposed to the template.
  */
 const app = createApp(App);
+
+const pinia = createPinia();
+app.use(pinia);
 
 // Mount the Vue application to the DOM element with the ID "app".
 app.mount('#app');

@@ -5,7 +5,7 @@
 
         <!-- <p class="text-3xl mb-8">Dimensions: <span class="font-extrabold text-yellow-300">{{ game.dimensions[0] }}</span></p> -->
 
-        <YellowButton @click="() => { game.save(); showNotif() }">
+        <YellowButton @click="() => { game.save(); NotifUtil.showSuccessNotif() }">
             Save
         </YellowButton>
 
@@ -13,7 +13,7 @@
             Export
         </YellowButton>
 
-        <Notification ref="notificationRef" />
+        <!-- <Notification ref="notificationRef" /> -->
     </div>
 </template>
 
@@ -25,25 +25,7 @@
 </script>
 
 <script lang="ts">
-    type NotificationInstance = InstanceType<typeof Notification>;
-
-    const notificationRef = ref(null) as NotificationInstance;
-
-    // function showDefaultNotification() {
-    //     if (notificationRef.value) {
-    //         notificationRef.value.showNotification(); // Uses default props
-    //     }
-    // };
-
-    function showNotif(s: string = 'Game saved!') {
-        if (notificationRef.value) {
-            notificationRef.value.showNotification({
-                title: s,
-                message: '',
-                duration: 3000 // 3 seconds
-            });
-        }
-    };
+    import { NotifUtil } from '../utilities/notificationUtil';
 
     async function exportSave(): Promise<void> {
         try {
@@ -51,10 +33,10 @@
             navigator.clipboard.writeText(save);
         
             // show notification
-            showNotif('Save copied to clipboard!');
+            NotifUtil.showSuccessNotif('Save copied to clipboard!');
         } catch (err) {
             console.error('Failed to copy text: ', err);
-            showNotif('Failed to save');
+            NotifUtil.showFailedNotif('Failed to save');
         }
     }
 </script>

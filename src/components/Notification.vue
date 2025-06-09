@@ -1,35 +1,28 @@
 <template>
   <transition
-    enter-active-class="transition ease-out duration-300"
-    enter-from-class="opacity-0 translate-x-4"
+    enter-active-class="transition ease-out duration-300 transform"
+    enter-from-class="opacity-0 translate-x-full"
     enter-to-class="opacity-100 translate-x-0"
-    leave-active-class="transition ease-in duration-200"
+    leave-active-class="transition ease-in duration-200 transform"
     leave-from-class="opacity-100 translate-x-0"
-    leave-to-class="opacity-0 translate-x-4"
+    leave-to-class="opacity-0 translate-x-full"
   >
-    <div
-      v-if="isVisible"
-      class="fixed bottom-4 right-4 bg-green-500 text-white p-4 rounded-lg shadow-lg flex items-center space-x-3 z-50"
-    >
+    <div :class="notificationClasses" class="w-full max-w-sm mx-auto mt-2 p-4 rounded-lg shadow-lg flex items-center space-x-3">
       <svg
+        v-if="iconPath"
         class="h-6 w-6"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
         xmlns="http://www.w3.org/2000/svg"
       >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-        ></path>
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" :d="iconPath"></path>
       </svg>
       <div>
-        <p class="font-semibold">{{ currentTitle }}</p>
-        <p class="text-sm">{{ currentMessage }}</p>
+        <p class="font-semibold">{{ notification.title }}</p>
+        <p class="text-sm">{{ notification.message }}</p>
       </div>
-      <button @click="hideNotification" class="ml-4 text-white hover:text-green-100">
+      <button @click="dismiss" class="ml-auto text-white hover:opacity-80">
         <svg
           class="h-5 w-5"
           fill="none"
@@ -49,78 +42,55 @@
   </transition>
 </template>
 
-<script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
+<script setup lang="ts">
+import { computed } from 'vue';
+import { useNotificationStore, type Notification } from '../stores/notifications'; // Adjust path and import type
 
-// Define props using defineProps
-// const props = defineProps({
-//   title: {
-//     type: String,
-//     default: 'Success!'
-//   },
-//   message: {
-//     type: String,
-//     default: 'Your action was successful.'
-//   },
-//   duration: {
-//     type: Number,
-//     default: 3000 // 3 seconds
-//   }
-// });
-const props = defineProps({
-  title: String,
-  message: String,
-  duration: Number,
+const props = defineProps<{
+  notification: Notification;
+}>();
+
+const notificationsStore = useNotificationStore();
+
+// Computed property for dynamic Tailwind classes based on notification type
+const notificationClasses = computed(() => {
+  const baseClasses = ['text-white'];
+  switch (props.notification.type) {
+    case 'success':
+      baseClasses.push('bg-green-500');
+      break;
+    case 'error':
+      baseClasses.push('bg-red-500');
+      break;
+    case 'warning':
+      baseClasses.push('bg-yellow-500');
+      break;
+    case 'info':
+      baseClasses.push('bg-blue-500');
+      break;
+    default:
+      baseClasses.push('bg-gray-700'); // Default fallback
+  }
+  return baseClasses.join(' ');
 });
 
-// Reactive state variables
-const isVisible = ref(false);
-const timeoutId = ref(null);
-const currentTitle = ref(props.title);
-const currentMessage = ref(props.message);
-const currentDuration = ref(props.duration);
-
-// Methods
-const showNotification = (options = {}) => {
-  currentTitle.value = options.title || props.title;
-  currentMessage.value = options.message || props.message;
-  currentDuration.value = options.duration !== undefined ? options.duration : props.duration;
-
-  isVisible.value = true;
-
-  if (timeoutId.value) {
-    clearTimeout(timeoutId.value);
+// Computed property for dynamic SVG icon paths
+const iconPath = computed(() => {
+  switch (props.notification.type) {
+    case 'success':
+      return 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z'; // Checkmark
+    case 'error':
+      return 'M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z'; // X-circle
+    case 'warning':
+      return 'M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z'; // Exclamation triangle
+    case 'info':
+      return 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'; // Info circle
+    default:
+      return ''; // No icon
   }
+});
 
-  if (currentDuration.value > 0) {
-    timeoutId.value = setTimeout(() => {
-      hideNotification();
-    }, currentDuration.value);
-  }
+const dismiss = () => {
+  notificationsStore.removeNotification(props.notification.id);
 };
-
-const hideNotification = () => {
-  isVisible.value = false;
-  if (timeoutId.value) {
-    clearTimeout(timeoutId.value);
-    timeoutId.value = null;
-  }
-};
-
-// Lifecycle hooks for cleanup
-onUnmounted(() => {
-  if (timeoutId.value) {
-    clearTimeout(timeoutId.value);
-  }
-});
-
-// Expose the showNotification and hideNotification methods to the parent
-defineExpose({
-  showNotification,
-  hideNotification
-});
 </script>
-
-<style scoped>
-/* No specific styles needed here as Tailwind handles most of it */
-</style>
