@@ -16361,6 +16361,13 @@ class Game {
     __publicField(this, "clickForCoins", () => {
       this.coins.value += this.coinsPerClick.value;
     });
+    __publicField(this, "buyMax", () => {
+      for (let i = 0; i < this.dimensions.length; i++) {
+        while (this.canBuyDimension(i)) {
+          this.buyDimension(i);
+        }
+      }
+    });
     let localSave = localStorage.getItem("saveData");
     if (localSave) {
       this.load(JSON.parse(localSave));
@@ -16379,10 +16386,14 @@ class Game {
   }
   update(dt) {
     dt = Math.min(dt, 60 * 60 * 24);
-    this.coins.value += this.dimensions[0] * dt;
+    this.coins.value += this.dimensions[0] * dt * this.calculateDimMultiplier(0);
     for (let i = this.dimensions.length - 1; i > 0; i--) {
-      this.dimensions[i - 1] += this.dimensions[i] * dt;
+      this.dimensions[i - 1] += this.dimensions[i] * dt * this.calculateDimMultiplier(i);
     }
+  }
+  calculateDimMultiplier(i) {
+    const m = Math.pow(1.02, this.dimBought[i]);
+    return m;
   }
   calculateDimensionCost(i) {
     return Math.round(Config.baseDimCost * Math.pow(Config.scale, this.dimBought[i]));
@@ -16473,10 +16484,12 @@ const _hoisted_1$4 = { class: "flex w-full items-center p-2 rounded-lg bg-gradie
 const _hoisted_2$4 = { class: "flex-2 text-lg font-semibold" };
 const _hoisted_3$4 = { class: "flex-1 text-lg font-semibold" };
 const _hoisted_4$2 = { class: "number-display" };
-const _hoisted_5 = { class: "flex-2 group relative inline-block" };
-const _hoisted_6 = ["disabled"];
-const _hoisted_7 = { class: "opacity-0 z-50 group-hover:opacity-100 absolute top-full left-1/2 -translate-x-1/2 mt-2 w-max p-2 bg-black text-white text-sm rounded-md transition-opacity duration-300 pointer-events-none" };
-const _hoisted_8 = { class: "number-display" };
+const _hoisted_5 = { class: "flex-1 text-lg font-semibold" };
+const _hoisted_6 = { class: "number-display" };
+const _hoisted_7 = { class: "flex-2 group relative inline-block" };
+const _hoisted_8 = ["disabled"];
+const _hoisted_9 = { class: "opacity-0 z-50 group-hover:opacity-100 absolute top-full left-1/2 -translate-x-1/2 mt-2 w-max p-2 bg-black text-white text-sm rounded-md transition-opacity duration-300 pointer-events-none" };
+const _hoisted_10 = { class: "number-display" };
 const _sfc_main$4 = {
   __name: "DimensionsRow",
   props: {
@@ -16498,25 +16511,28 @@ const _sfc_main$4 = {
           _cache[0] || (_cache[0] = createTextVNode(" Antimatter Dimension "))
         ]),
         createBaseVNode("div", _hoisted_3$4, [
-          createBaseVNode("span", _hoisted_4$2, toDisplayString(unref(styler).writeNumber(unref(game).dimensions[__props.dimension])), 1),
-          createTextVNode(" [" + toDisplayString(unref(styler).writeNumber(unref(game).dimBought[__props.dimension])) + "] ", 1)
+          createBaseVNode("span", _hoisted_4$2, toDisplayString(unref(styler).writeNumber(Math.pow(1.02, unref(game).dimBought[__props.dimension]))), 1),
+          _cache[1] || (_cache[1] = createTextVNode(" x "))
         ]),
         createBaseVNode("div", _hoisted_5, [
+          createBaseVNode("span", _hoisted_6, toDisplayString(unref(styler).writeNumber(unref(game).dimensions[__props.dimension])), 1)
+        ]),
+        createBaseVNode("div", _hoisted_7, [
           createBaseVNode("button", {
             onClick: handleButtonClick,
             class: normalizeClass(["w-full px-6 py-2 text-white font-bold rounded-lg shadow-md", unref(game).canBuyDimension(__props.dimension) ? "bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 transition duration-300 ease-in-out transform hover:scale-105" : "bg-blue-800/70"]),
             disabled: !unref(game).canBuyDimension(__props.dimension)
           }, [
-            _cache[1] || (_cache[1] = createTextVNode(" Buy Another Dimension for ")),
+            _cache[2] || (_cache[2] = createTextVNode(" Buy Another Dimension for ")),
             createBaseVNode("span", null, toDisplayString(unref(styler).writeNumber(unref(game).calculateDimensionCost(__props.dimension))), 1)
-          ], 10, _hoisted_6),
-          createBaseVNode("div", _hoisted_7, [
-            _cache[2] || (_cache[2] = createTextVNode(" Purchased ")),
-            createBaseVNode("span", _hoisted_8, toDisplayString(unref(game).dimBought[__props.dimension]), 1),
-            _cache[3] || (_cache[3] = createTextVNode(" times "))
+          ], 10, _hoisted_8),
+          createBaseVNode("div", _hoisted_9, [
+            _cache[3] || (_cache[3] = createTextVNode(" Purchased ")),
+            createBaseVNode("span", _hoisted_10, toDisplayString(unref(game).dimBought[__props.dimension]), 1),
+            _cache[4] || (_cache[4] = createTextVNode(" times "))
           ])
         ]),
-        _cache[4] || (_cache[4] = createBaseVNode("p", null, null, -1))
+        _cache[5] || (_cache[5] = createBaseVNode("p", null, null, -1))
       ]);
     };
   }
@@ -16530,12 +16546,21 @@ const _sfc_main$3 = {
   setup(__props) {
     return (_ctx, _cache) => {
       return openBlock(), createElementBlock("div", _hoisted_1$3, [
-        _cache[2] || (_cache[2] = createBaseVNode("h1", { class: "text-5xl font-bold mb-6 text-shadow-lg" }, " Idle Clicker ", -1)),
+        _cache[3] || (_cache[3] = createBaseVNode("h1", { class: "text-5xl font-bold mb-6 text-shadow-lg" }, " Idle Clicker ", -1)),
         createBaseVNode("p", _hoisted_2$3, [
           _cache[0] || (_cache[0] = createTextVNode(" You have ")),
           createBaseVNode("span", _hoisted_3$3, toDisplayString(unref(game).getCoins()), 1),
           _cache[1] || (_cache[1] = createTextVNode(" antimatter. "))
         ]),
+        createVNode(_sfc_main$5, {
+          onClick: unref(game).buyMax
+        }, {
+          default: withCtx(() => _cache[2] || (_cache[2] = [
+            createTextVNode(" Buy Max (M) ")
+          ])),
+          _: 1,
+          __: [2]
+        }, 8, ["onClick"]),
         createBaseVNode("div", _hoisted_4$1, [
           (openBlock(), createElementBlock(Fragment, null, renderList(8, (i) => {
             return createVNode(_sfc_main$4, {
