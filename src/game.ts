@@ -73,10 +73,24 @@ export class Game {
 	}
 
 	buyMax = () => {
-		for (let i = 0; i < this.dimensions.length; i++) {
-			while (this.canBuyDimension(i)) {
-				this.buyDimension(i);
+		// do cheapest
+		while (true) {
+			let minCost = Number.MAX_VALUE;
+			let cheapest = 0;
+
+			for (let i = 0; i < this.dimensions.length; i++) {
+				const c = this.calculateDimensionCost(i);
+				if (c < minCost) {
+					cheapest = i;
+					minCost = c;
+				}
 			}
+
+			if (minCost > this.coins.value) {
+				return;
+			}
+
+			this.buyDimension(cheapest);
 		}
 	};
 
