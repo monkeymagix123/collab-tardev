@@ -17,7 +17,7 @@
 	// });
 	// const buttonClasses = 'bg-yellow-400 hover:bg-yellow-500 text-purple-900 font-bold py-4 px-8 rounded-full shadow-lg transform transition-all duration-200 ease-in-out active:scale-95 focus:outline-none focus:ring-4 focus:ring-yellow-300 focus:ring-opacity-75 text-2xl';
 	const buttonClasses =
-		'bg-yellow-400 hover:bg-yellow-500 text-purple-900 font-bold py-4 px-8 rounded-2xl shadow-lg transform transition-all duration-200 ease-in-out active:scale-95 focus:outline-none focus:ring-4 focus:ring-yellow-300 focus:ring-opacity-75 text-2xl';
+		'bg-yellow-400 hover:bg-yellow-500 text-purple-900 font-bold m-4 py-4 px-8 rounded-2xl shadow-lg transform transition-all duration-200 ease-in-out active:scale-95 focus:outline-none focus:ring-4 focus:ring-yellow-300 focus:ring-opacity-75 text-2xl';
 </script>
 
 <script lang="ts">

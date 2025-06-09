@@ -22,6 +22,9 @@
 		</YellowButton>
 
 		<YellowButton @click="exportSave"> Export </YellowButton>
+
+		<!-- MAKE THIS BETTER!!! -->
+		<YellowButton @click="game.reset"> Hard Reset </YellowButton>
 	</div>
 </template>
 

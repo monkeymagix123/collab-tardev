@@ -10,11 +10,16 @@ export class Game {
 	 */
 	coins = ref(Config.startCoins);
 
-	dimensions = reactive(new Array(8).fill(0));
-	dimBought = reactive(new Array(8).fill(0));
-	// dimRef = reactive(new Array(8));
+	tickspeed = ref(1);
+
+	dimensions = reactive(new Array(Config.dimensions).fill(0));
+	dimBought = reactive(new Array(Config.dimensions).fill(0));
 
 	time: number = -1;
+
+	// intervals
+	autoSaveInterval: NodeJS.Timeout;
+	updateInterval: NodeJS.Timeout;
 
 	/**
 	 * A computed property that calculates coins gained per click.
@@ -38,9 +43,9 @@ export class Game {
 
 		this.save();
 
-		setInterval(() => this.doUpdate(), 33);
+		this.updateInterval = setInterval(() => this.doUpdate(), 33);
 		// setInterval(() => this.save(), 1000 * 20); // show game saved message?
-		setInterval(() => this.save(), 33);
+		this.autoSaveInterval = setInterval(() => this.save(), 33);
 	}
 
 	/**
@@ -73,6 +78,10 @@ export class Game {
 	}
 
 	buyMax = () => {
+		while (this.canBuyTickspeed()) {
+			this.buyTickspeed();
+		}
+		
 		// do cheapest
 		while (true) {
 			let minCost = Number.MAX_VALUE;
@@ -96,12 +105,30 @@ export class Game {
 
 	calculateDimMultiplier(i: number) {
 		const m = Math.pow(1.02, this.dimBought[i]);
-		return m;
+		const t = Math.pow(Config.tickspeedMultiplier, this.tickspeed.value);
+		return m * t;
+	}
+
+	calculateTickspeedCost() {
+		return Math.round(Config.tickspeedBaseCost * Math.pow(Config.tickspeedScale, this.tickspeed.value));
+	}
+
+	canBuyTickspeed() {
+		const nextCost = this.calculateTickspeedCost();
+		return this.coins.value >= nextCost;
+	}
+
+	buyTickspeed() {
+		const nextCost = this.calculateTickspeedCost();
+		if (this.canBuyTickspeed()) {
+			this.tickspeed.value++;
+			this.coins.value -= nextCost;
+		}
 	}
 
 	calculateDimensionCost(i: number) {
 		return Math.round(
-			Math.pow(Config.baseDimCost, i) * Math.pow(Config.scale, this.dimBought[i])
+			Math.pow(Config.baseDimCost, i + 1) * Math.pow(Config.baseDimCost, Math.floor(i / 3)) * Math.pow(Config.scale, this.dimBought[i])
 		);
 	}
 
@@ -151,6 +178,10 @@ export class Game {
 	getSave(): Record<string, unknown> {
 		const result: Record<string, unknown> = {};
 		for (const key in this) {
+			if (key.includes('interval')) {
+				continue;
+			}
+
 			const val = this[key];
 			if (val && typeof val === 'object' && 'value' in val) {
 				result[key] = val.value;
@@ -175,5 +206,48 @@ export class Game {
 				}
 			}
 		}
+	}
+
+	reset = () => {
+		// console.log('Loading data:', data);
+		console.log('Before load - coins:', this.coins.value);
+		console.log(this.dimensions[0]);
+
+		// Create a new default game instance
+		const fresh = new Game();
+
+		// Stop saving temporarily to avoid overwriting
+		clearInterval(this.autoSaveInterval);
+		clearInterval(this.updateInterval);
+
+		// // Copy state values from fresh instance
+		// for (const key in fresh) {
+		// 	const tkey = key as keyof Game;
+
+		// 	const freshValue = fresh[tkey];
+
+		// 	if (freshValue && typeof freshValue === 'object' && 'value' in freshValue) {
+		// 		(this[tkey] as { value: unknown }).value = freshValue.value;
+		// 	} else {
+		// 		(this as Record<string, unknown>)[tkey] = freshValue;
+		// 	}
+		// }
+		this.load(fresh.getSave());
+
+		this.coins.value = Config.startCoins;
+
+		this.tickspeed.value = 0;
+		this.dimensions.fill(0);
+		this.dimBought.fill(0);
+
+		// Reset timestamps and restart intervals
+		this.time = Date.now();
+		this.autoSaveInterval = setInterval(() => this.save(), 33);
+		this.updateInterval = setInterval(() => this.doUpdate(), 33);
+
+		this.save();
+
+		console.log('After load - coins:', this.coins.value);
+		console.log(this.dimensions[0]);
 	}
 }

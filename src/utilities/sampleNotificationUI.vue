@@ -27,7 +27,7 @@
 		</button>
 	</main>
 
-	<NotificationsContainer />
+	<NotificationContainer />
 </template>
 
 <script setup lang="ts">
