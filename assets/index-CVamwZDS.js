@@ -16674,22 +16674,22 @@ const NotifUtil = {
     });
   }
 };
-const _hoisted_1$1 = { class: "h-full flex flex-col items-center justify-center" };
+const _hoisted_1$1 = { class: "h-full flex flex-col items-center" };
 const _hoisted_2$1 = { class: "text-3xl mb-8" };
 const _hoisted_3$1 = { class: "font-extrabold text-yellow-300 number-display" };
-async function exportSave() {
-  try {
-    const save = game.exportSave();
-    navigator.clipboard.writeText(save);
-    NotifUtil.showSuccessNotif("Save copied to clipboard!");
-  } catch (err) {
-    console.error("Failed to copy text: ", err);
-    NotifUtil.showFailedNotif("Failed to save");
-  }
-}
 const _sfc_main$1 = /* @__PURE__ */ defineComponent({
   __name: "Options",
   setup(__props) {
+    async function exportSave() {
+      try {
+        const save = game.exportSave();
+        navigator.clipboard.writeText(save);
+        NotifUtil.showSuccessNotif("Save copied to clipboard!");
+      } catch (err) {
+        console.error("Failed to copy text: ", err);
+        NotifUtil.showFailedNotif("Failed to save");
+      }
+    }
     return (_ctx, _cache) => {
       return openBlock(), createElementBlock("div", _hoisted_1$1, [
         _cache[4] || (_cache[4] = createBaseVNode("h1", { class: "text-5xl font-bold mb-6 text-shadow-lg" }, "Upgrades", -1)),
