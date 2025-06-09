@@ -9,6 +9,11 @@
       antimatter.
     </p>
 
+    <YellowButton
+      @click="game.buyMax"
+    >
+      Buy Max (M)
+    </YellowButton>
     <div class="flex-1 min-h-0  w-full flex-col items-center justify-between p-4 shadow-lg rounded-xl mb-4 mx-auto overflow-y-auto">
       <DimensionsRow
         v-for="i in 8"

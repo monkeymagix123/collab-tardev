@@ -6,7 +6,10 @@
         <span>{{ styler.endInt(dimension + 1) }}</span> Antimatter Dimension
     </div>
     <div class="flex-1 text-lg font-semibold">
-      <span class="number-display"> {{ styler.writeNumber(game.dimensions[dimension]) }} </span> [{{ styler.writeNumber(game.dimBought[dimension]) }}]
+      <span class="number-display"> {{ styler.writeNumber(Math.pow(1.02, game.dimBought[dimension])) }} </span> x
+    </div>
+    <div class="flex-1 text-lg font-semibold">
+      <span class="number-display"> {{ styler.writeNumber(game.dimensions[dimension]) }} </span>
     </div>
     <div class="flex-2 group relative inline-block">
       <button

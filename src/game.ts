@@ -63,13 +63,26 @@ export class Game {
         // cap 24 hrs offline time
         dt = Math.min(dt, 60 * 60 * 24);
 
-        this.coins.value += this.dimensions[0] * dt;
+        this.coins.value += this.dimensions[0] * dt * this.calculateDimMultiplier(0);
         // reverse ig
         // Iterate backwards from the second-highest dimension (index 7) down to the second dimension (index 1)
         for (let i = this.dimensions.length - 1; i > 0; i--) {
             // Each dimension produces the one below it
-            this.dimensions[i - 1] += this.dimensions[i] * dt;
+            this.dimensions[i - 1] += this.dimensions[i] * dt * this.calculateDimMultiplier(i);
         }
+    }
+
+    buyMax = () => {
+        for (let i = 0; i < this.dimensions.length; i++) {
+            while (this.canBuyDimension(i)) {
+                this.buyDimension(i);
+            }
+        }
+    }
+
+    calculateDimMultiplier(i: number) {
+        const m = Math.pow(1.02, this.dimBought[i]);
+        return m;
     }
 
     calculateDimensionCost (i: number) {
