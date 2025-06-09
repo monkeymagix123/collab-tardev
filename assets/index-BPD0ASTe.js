@@ -16311,7 +16311,7 @@ const styler = {
     ];
     units = units.reverse();
     if (a >= 1e36) {
-      return a.toPrecision(3);
+      return a.toPrecision(3).replace("e+", "e");
     }
     for (const unit of units) {
       if (a >= unit.value) {
@@ -16482,12 +16482,12 @@ const _sfc_main$5 = /* @__PURE__ */ defineComponent({
   }
 });
 const _hoisted_1$4 = { class: "flex w-full items-center p-2 rounded-lg bg-gradient-to-r from-blue-700/30 via-purple-700/30 to-blue-700/30 rounded-lg mb-3" };
-const _hoisted_2$4 = { class: "flex-2 text-lg font-semibold" };
+const _hoisted_2$4 = { class: "flex-[2] text-lg font-semibold" };
 const _hoisted_3$4 = { class: "flex-1 text-lg font-semibold" };
 const _hoisted_4$2 = { class: "number-display" };
 const _hoisted_5 = { class: "flex-1 text-lg font-semibold" };
 const _hoisted_6 = { class: "number-display" };
-const _hoisted_7 = { class: "flex-2 group relative inline-block" };
+const _hoisted_7 = { class: "flex-[1.5] group relative inline-block" };
 const _hoisted_8 = ["disabled"];
 const _hoisted_9 = { class: "opacity-0 z-50 group-hover:opacity-100 absolute top-full left-1/2 -translate-x-1/2 mt-2 w-max p-2 bg-black text-white text-sm rounded-md transition-opacity duration-300 pointer-events-none" };
 const _hoisted_10 = { class: "number-display" };
@@ -16512,8 +16512,8 @@ const _sfc_main$4 = {
           _cache[0] || (_cache[0] = createTextVNode(" Antimatter Dimension "))
         ]),
         createBaseVNode("div", _hoisted_3$4, [
-          createBaseVNode("span", _hoisted_4$2, toDisplayString(unref(styler).writeNumber(Math.pow(1.02, unref(game).dimBought[__props.dimension]))), 1),
-          _cache[1] || (_cache[1] = createTextVNode(" x "))
+          _cache[1] || (_cache[1] = createBaseVNode("span", { class: "font-normal" }, "×", -1)),
+          createBaseVNode("span", _hoisted_4$2, toDisplayString(unref(styler).writeNumber(unref(game).calculateDimMultiplier(__props.dimension))), 1)
         ]),
         createBaseVNode("div", _hoisted_5, [
           createBaseVNode("span", _hoisted_6, toDisplayString(unref(styler).writeNumber(unref(game).dimensions[__props.dimension])), 1)
@@ -16524,7 +16524,7 @@ const _sfc_main$4 = {
             class: normalizeClass(["w-full px-6 py-2 text-white font-bold rounded-lg shadow-md", unref(game).canBuyDimension(__props.dimension) ? "bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 transition duration-300 ease-in-out transform hover:scale-105" : "bg-blue-800/70"]),
             disabled: !unref(game).canBuyDimension(__props.dimension)
           }, [
-            _cache[2] || (_cache[2] = createTextVNode(" Buy Another Dimension for ")),
+            _cache[2] || (_cache[2] = createTextVNode(" Buy 1 for ")),
             createBaseVNode("span", null, toDisplayString(unref(styler).writeNumber(unref(game).calculateDimensionCost(__props.dimension))), 1)
           ], 10, _hoisted_8),
           createBaseVNode("div", _hoisted_9, [
