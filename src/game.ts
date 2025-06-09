@@ -101,7 +101,7 @@ export class Game {
 
 	calculateDimensionCost(i: number) {
 		return Math.round(
-			Config.baseDimCost * Math.pow(Config.scale, this.dimBought[i])
+			Math.pow(Config.baseDimCost, i) * Math.pow(Config.scale, this.dimBought[i])
 		);
 	}
 
