@@ -16153,7 +16153,7 @@ const _hoisted_2$6 = ["d"];
 const _hoisted_3$5 = { class: "font-semibold" };
 const _hoisted_4$3 = { class: "text-sm" };
 const _sfc_main$7 = /* @__PURE__ */ defineComponent({
-  __name: "Notification",
+  __name: "NotificationItem",
   props: {
     notification: {}
   },
@@ -16327,7 +16327,7 @@ const styler = {
     return a.toLocaleString(void 0, { maximumFractionDigits: 0 });
   },
   endInt: function(a) {
-    let t = this.writeNumber(a);
+    const t = this.writeNumber(a);
     if (a % 1 != 0) {
       return t;
     }
@@ -16375,7 +16375,7 @@ class Game {
         }
       }
     });
-    let localSave = localStorage.getItem("saveData");
+    const localSave = localStorage.getItem("saveData");
     if (localSave) {
       this.load(JSON.parse(localSave));
     }
@@ -16474,14 +16474,18 @@ const _sfc_main$5 = /* @__PURE__ */ defineComponent({
   ...__default__,
   emits: ["click"],
   setup(__props, { emit: __emit }) {
+    const emit2 = __emit;
+    function onClick() {
+      emit2("click");
+    }
     const buttonClasses = "bg-yellow-400 hover:bg-yellow-500 text-purple-900 font-bold py-4 px-8 rounded-2xl shadow-lg transform transition-all duration-200 ease-in-out active:scale-95 focus:outline-none focus:ring-4 focus:ring-yellow-300 focus:ring-opacity-75 text-2xl";
     return (_ctx, _cache) => {
       return openBlock(), createElementBlock("button", {
         class: normalizeClass(buttonClasses),
-        onClick: _cache[0] || (_cache[0] = ($event) => _ctx.$emit("click"))
+        onClick
       }, [
         renderSlot(_ctx.$slots, "default", {}, () => [
-          _cache[1] || (_cache[1] = createTextVNode("a button"))
+          _cache[0] || (_cache[0] = createTextVNode("a button"))
         ])
       ]);
     };
@@ -16497,7 +16501,7 @@ const _hoisted_7 = { class: "flex-[1.5] group relative inline-block" };
 const _hoisted_8 = ["disabled"];
 const _hoisted_9 = { class: "opacity-0 z-50 group-hover:opacity-100 absolute top-full left-1/2 -translate-x-1/2 mt-2 w-max p-2 bg-black text-white text-sm rounded-md transition-opacity duration-300 pointer-events-none" };
 const _hoisted_10 = { class: "number-display" };
-const _sfc_main$4 = {
+const _sfc_main$4 = /* @__PURE__ */ defineComponent({
   __name: "DimensionsRow",
   props: {
     dimension: Number,
@@ -16546,7 +16550,7 @@ const _sfc_main$4 = {
       ]);
     };
   }
-};
+});
 const _hoisted_1$3 = { class: "h-full flex flex-col items-center justify-start" };
 const _hoisted_2$3 = { class: "mb-8" };
 const _hoisted_3$3 = { class: "font-extrabold text-yellow-300 number-display large" };
