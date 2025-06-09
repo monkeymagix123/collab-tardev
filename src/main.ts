@@ -4,7 +4,7 @@ import App from './App.vue';
 
 import { createPinia } from 'pinia';
 
-import './assets/style.css'
+import './assets/style.css';
 
 /**
  * Creates the main Vue application instance.
