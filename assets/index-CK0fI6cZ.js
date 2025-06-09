@@ -16413,7 +16413,7 @@ class Game {
     return m;
   }
   calculateDimensionCost(i) {
-    return Math.round(Config.baseDimCost * Math.pow(Config.scale, this.dimBought[i]));
+    return Math.round(Math.pow(Config.baseDimCost, i) * Math.pow(Config.scale, this.dimBought[i]));
   }
   canBuyDimension(i) {
     const nextCost = this.calculateDimensionCost(i);
