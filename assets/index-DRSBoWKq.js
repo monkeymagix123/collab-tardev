@@ -84,7 +84,7 @@ const toTypeString = (value) => objectToString.call(value);
 const toRawType = (value) => {
   return toTypeString(value).slice(8, -1);
 };
-const isPlainObject = (val) => toTypeString(val) === "[object Object]";
+const isPlainObject$1 = (val) => toTypeString(val) === "[object Object]";
 const isIntegerKey = (key) => isString(key) && key !== "NaN" && key[0] !== "-" && "" + parseInt(key, 10) === key;
 const isReservedProp = /* @__PURE__ */ makeMap(
   // the leading comma is intentional so empty string "" is also included
@@ -301,7 +301,7 @@ const replacer = (_key, val) => {
     };
   } else if (isSymbol(val)) {
     return stringifySymbol(val);
-  } else if (isObject(val) && !isArray(val) && !isPlainObject(val)) {
+  } else if (isObject(val) && !isArray(val) && !isPlainObject$1(val)) {
     return String(val);
   }
   return val;
@@ -535,9 +535,9 @@ class ReactiveEffect {
 let batchDepth = 0;
 let batchedSub;
 let batchedComputed;
-function batch(sub, isComputed = false) {
+function batch(sub, isComputed2 = false) {
   sub.flags |= 8;
-  if (isComputed) {
+  if (isComputed2) {
     sub.next = batchedComputed;
     batchedComputed = sub;
     return;
@@ -1928,7 +1928,7 @@ function traverse(value, depth = Infinity, seen2) {
     value.forEach((v) => {
       traverse(v, depth, seen2);
     });
-  } else if (isPlainObject(value)) {
+  } else if (isPlainObject$1(value)) {
     for (const key in value) {
       traverse(value[key], depth, seen2);
     }
@@ -9431,7 +9431,7 @@ const REMOVAL = {};
 // @__NO_SIDE_EFFECTS__
 function defineCustomElement(options, extraOptions, _createApp) {
   const Comp = /* @__PURE__ */ defineComponent(options, extraOptions);
-  if (isPlainObject(Comp)) extend(Comp, extraOptions);
+  if (isPlainObject$1(Comp)) extend(Comp, extraOptions);
   class VueCustomElement extends VueElement {
     constructor(initialProps) {
       super(Comp, initialProps, _createApp);
@@ -9680,7 +9680,7 @@ class VueElement extends BaseClass {
           this.dispatchEvent(
             new CustomEvent(
               event,
-              isPlainObject(args[0]) ? extend({ detail: args }, args[0]) : { detail: args }
+              isPlainObject$1(args[0]) ? extend({ detail: args }, args[0]) : { detail: args }
             )
           );
         };
@@ -10003,16 +10003,16 @@ const vModelCheckbox = {
       const modelValue = el._modelValue;
       const elementValue = getValue(el);
       const checked = el.checked;
-      const assign = el[assignKey];
+      const assign2 = el[assignKey];
       if (isArray(modelValue)) {
         const index = looseIndexOf(modelValue, elementValue);
         const found = index !== -1;
         if (checked && !found) {
-          assign(modelValue.concat(elementValue));
+          assign2(modelValue.concat(elementValue));
         } else if (!checked && found) {
           const filtered = [...modelValue];
           filtered.splice(index, 1);
-          assign(filtered);
+          assign2(filtered);
         }
       } else if (isSet(modelValue)) {
         const cloned = new Set(modelValue);
@@ -10021,9 +10021,9 @@ const vModelCheckbox = {
         } else {
           cloned.delete(elementValue);
         }
-        assign(cloned);
+        assign2(cloned);
       } else {
-        assign(getCheckboxValue(el, checked));
+        assign2(getCheckboxValue(el, checked));
       }
     });
   },
@@ -15763,6 +15763,516 @@ function compileToFunction(template, options) {
   return compileCache[key] = render2;
 }
 registerRuntimeCompiler(compileToFunction);
+/*!
+ * pinia v3.0.3
+ * (c) 2025 Eduardo San Martin Morote
+ * @license MIT
+ */
+let activePinia;
+const setActivePinia = (pinia2) => activePinia = pinia2;
+const piniaSymbol = (
+  /* istanbul ignore next */
+  Symbol()
+);
+function isPlainObject(o) {
+  return o && typeof o === "object" && Object.prototype.toString.call(o) === "[object Object]" && typeof o.toJSON !== "function";
+}
+var MutationType;
+(function(MutationType2) {
+  MutationType2["direct"] = "direct";
+  MutationType2["patchObject"] = "patch object";
+  MutationType2["patchFunction"] = "patch function";
+})(MutationType || (MutationType = {}));
+function createPinia() {
+  const scope = effectScope(true);
+  const state = scope.run(() => ref({}));
+  let _p = [];
+  let toBeInstalled = [];
+  const pinia2 = markRaw({
+    install(app2) {
+      setActivePinia(pinia2);
+      pinia2._a = app2;
+      app2.provide(piniaSymbol, pinia2);
+      app2.config.globalProperties.$pinia = pinia2;
+      toBeInstalled.forEach((plugin) => _p.push(plugin));
+      toBeInstalled = [];
+    },
+    use(plugin) {
+      if (!this._a) {
+        toBeInstalled.push(plugin);
+      } else {
+        _p.push(plugin);
+      }
+      return this;
+    },
+    _p,
+    // it's actually undefined here
+    // @ts-expect-error
+    _a: null,
+    _e: scope,
+    _s: /* @__PURE__ */ new Map(),
+    state
+  });
+  return pinia2;
+}
+const noop = () => {
+};
+function addSubscription(subscriptions, callback, detached, onCleanup = noop) {
+  subscriptions.push(callback);
+  const removeSubscription = () => {
+    const idx = subscriptions.indexOf(callback);
+    if (idx > -1) {
+      subscriptions.splice(idx, 1);
+      onCleanup();
+    }
+  };
+  if (!detached && getCurrentScope()) {
+    onScopeDispose(removeSubscription);
+  }
+  return removeSubscription;
+}
+function triggerSubscriptions(subscriptions, ...args) {
+  subscriptions.slice().forEach((callback) => {
+    callback(...args);
+  });
+}
+const fallbackRunWithContext = (fn) => fn();
+const ACTION_MARKER = Symbol();
+const ACTION_NAME = Symbol();
+function mergeReactiveObjects(target, patchToApply) {
+  if (target instanceof Map && patchToApply instanceof Map) {
+    patchToApply.forEach((value, key) => target.set(key, value));
+  } else if (target instanceof Set && patchToApply instanceof Set) {
+    patchToApply.forEach(target.add, target);
+  }
+  for (const key in patchToApply) {
+    if (!patchToApply.hasOwnProperty(key))
+      continue;
+    const subPatch = patchToApply[key];
+    const targetValue = target[key];
+    if (isPlainObject(targetValue) && isPlainObject(subPatch) && target.hasOwnProperty(key) && !isRef(subPatch) && !isReactive(subPatch)) {
+      target[key] = mergeReactiveObjects(targetValue, subPatch);
+    } else {
+      target[key] = subPatch;
+    }
+  }
+  return target;
+}
+const skipHydrateSymbol = (
+  /* istanbul ignore next */
+  Symbol()
+);
+function shouldHydrate(obj) {
+  return !isPlainObject(obj) || !Object.prototype.hasOwnProperty.call(obj, skipHydrateSymbol);
+}
+const { assign } = Object;
+function isComputed(o) {
+  return !!(isRef(o) && o.effect);
+}
+function createOptionsStore(id, options, pinia2, hot) {
+  const { state, actions, getters } = options;
+  const initialState = pinia2.state.value[id];
+  let store;
+  function setup() {
+    if (!initialState && true) {
+      pinia2.state.value[id] = state ? state() : {};
+    }
+    const localState = toRefs(pinia2.state.value[id]);
+    return assign(localState, actions, Object.keys(getters || {}).reduce((computedGetters, name) => {
+      computedGetters[name] = markRaw(computed(() => {
+        setActivePinia(pinia2);
+        const store2 = pinia2._s.get(id);
+        return getters[name].call(store2, store2);
+      }));
+      return computedGetters;
+    }, {}));
+  }
+  store = createSetupStore(id, setup, options, pinia2, hot, true);
+  return store;
+}
+function createSetupStore($id, setup, options = {}, pinia2, hot, isOptionsStore) {
+  let scope;
+  const optionsForPlugin = assign({ actions: {} }, options);
+  const $subscribeOptions = { deep: true };
+  let isListening;
+  let isSyncListening;
+  let subscriptions = [];
+  let actionSubscriptions = [];
+  let debuggerEvents;
+  const initialState = pinia2.state.value[$id];
+  if (!isOptionsStore && !initialState && true) {
+    pinia2.state.value[$id] = {};
+  }
+  ref({});
+  let activeListener;
+  function $patch(partialStateOrMutator) {
+    let subscriptionMutation;
+    isListening = isSyncListening = false;
+    if (typeof partialStateOrMutator === "function") {
+      partialStateOrMutator(pinia2.state.value[$id]);
+      subscriptionMutation = {
+        type: MutationType.patchFunction,
+        storeId: $id,
+        events: debuggerEvents
+      };
+    } else {
+      mergeReactiveObjects(pinia2.state.value[$id], partialStateOrMutator);
+      subscriptionMutation = {
+        type: MutationType.patchObject,
+        payload: partialStateOrMutator,
+        storeId: $id,
+        events: debuggerEvents
+      };
+    }
+    const myListenerId = activeListener = Symbol();
+    nextTick().then(() => {
+      if (activeListener === myListenerId) {
+        isListening = true;
+      }
+    });
+    isSyncListening = true;
+    triggerSubscriptions(subscriptions, subscriptionMutation, pinia2.state.value[$id]);
+  }
+  const $reset = isOptionsStore ? function $reset2() {
+    const { state } = options;
+    const newState = state ? state() : {};
+    this.$patch(($state) => {
+      assign($state, newState);
+    });
+  } : (
+    /* istanbul ignore next */
+    noop
+  );
+  function $dispose() {
+    scope.stop();
+    subscriptions = [];
+    actionSubscriptions = [];
+    pinia2._s.delete($id);
+  }
+  const action = (fn, name = "") => {
+    if (ACTION_MARKER in fn) {
+      fn[ACTION_NAME] = name;
+      return fn;
+    }
+    const wrappedAction = function() {
+      setActivePinia(pinia2);
+      const args = Array.from(arguments);
+      const afterCallbackList = [];
+      const onErrorCallbackList = [];
+      function after(callback) {
+        afterCallbackList.push(callback);
+      }
+      function onError(callback) {
+        onErrorCallbackList.push(callback);
+      }
+      triggerSubscriptions(actionSubscriptions, {
+        args,
+        name: wrappedAction[ACTION_NAME],
+        store,
+        after,
+        onError
+      });
+      let ret;
+      try {
+        ret = fn.apply(this && this.$id === $id ? this : store, args);
+      } catch (error) {
+        triggerSubscriptions(onErrorCallbackList, error);
+        throw error;
+      }
+      if (ret instanceof Promise) {
+        return ret.then((value) => {
+          triggerSubscriptions(afterCallbackList, value);
+          return value;
+        }).catch((error) => {
+          triggerSubscriptions(onErrorCallbackList, error);
+          return Promise.reject(error);
+        });
+      }
+      triggerSubscriptions(afterCallbackList, ret);
+      return ret;
+    };
+    wrappedAction[ACTION_MARKER] = true;
+    wrappedAction[ACTION_NAME] = name;
+    return wrappedAction;
+  };
+  const partialStore = {
+    _p: pinia2,
+    // _s: scope,
+    $id,
+    $onAction: addSubscription.bind(null, actionSubscriptions),
+    $patch,
+    $reset,
+    $subscribe(callback, options2 = {}) {
+      const removeSubscription = addSubscription(subscriptions, callback, options2.detached, () => stopWatcher());
+      const stopWatcher = scope.run(() => watch(() => pinia2.state.value[$id], (state) => {
+        if (options2.flush === "sync" ? isSyncListening : isListening) {
+          callback({
+            storeId: $id,
+            type: MutationType.direct,
+            events: debuggerEvents
+          }, state);
+        }
+      }, assign({}, $subscribeOptions, options2)));
+      return removeSubscription;
+    },
+    $dispose
+  };
+  const store = reactive(partialStore);
+  pinia2._s.set($id, store);
+  const runWithContext = pinia2._a && pinia2._a.runWithContext || fallbackRunWithContext;
+  const setupStore = runWithContext(() => pinia2._e.run(() => (scope = effectScope()).run(() => setup({ action }))));
+  for (const key in setupStore) {
+    const prop = setupStore[key];
+    if (isRef(prop) && !isComputed(prop) || isReactive(prop)) {
+      if (!isOptionsStore) {
+        if (initialState && shouldHydrate(prop)) {
+          if (isRef(prop)) {
+            prop.value = initialState[key];
+          } else {
+            mergeReactiveObjects(prop, initialState[key]);
+          }
+        }
+        pinia2.state.value[$id][key] = prop;
+      }
+    } else if (typeof prop === "function") {
+      const actionValue = action(prop, key);
+      setupStore[key] = actionValue;
+      optionsForPlugin.actions[key] = prop;
+    } else ;
+  }
+  assign(store, setupStore);
+  assign(toRaw(store), setupStore);
+  Object.defineProperty(store, "$state", {
+    get: () => pinia2.state.value[$id],
+    set: (state) => {
+      $patch(($state) => {
+        assign($state, state);
+      });
+    }
+  });
+  pinia2._p.forEach((extender) => {
+    {
+      assign(store, scope.run(() => extender({
+        store,
+        app: pinia2._a,
+        pinia: pinia2,
+        options: optionsForPlugin
+      })));
+    }
+  });
+  if (initialState && isOptionsStore && options.hydrate) {
+    options.hydrate(store.$state, initialState);
+  }
+  isListening = true;
+  isSyncListening = true;
+  return store;
+}
+/*! #__NO_SIDE_EFFECTS__ */
+// @__NO_SIDE_EFFECTS__
+function defineStore(id, setup, setupOptions) {
+  let options;
+  const isSetupStore = typeof setup === "function";
+  options = isSetupStore ? setupOptions : setup;
+  function useStore(pinia2, hot) {
+    const hasContext = hasInjectionContext();
+    pinia2 = // in test mode, ignore the argument provided as we can always retrieve a
+    // pinia instance with getActivePinia()
+    pinia2 || (hasContext ? inject(piniaSymbol, null) : null);
+    if (pinia2)
+      setActivePinia(pinia2);
+    pinia2 = activePinia;
+    if (!pinia2._s.has(id)) {
+      if (isSetupStore) {
+        createSetupStore(id, setup, options, pinia2);
+      } else {
+        createOptionsStore(id, options, pinia2);
+      }
+    }
+    const store = pinia2._s.get(id);
+    return store;
+  }
+  useStore.$id = id;
+  return useStore;
+}
+const useNotificationStore = /* @__PURE__ */ defineStore("notification", () => {
+  const notifications = ref([]);
+  const addNotification = (options) => {
+    const id = `notification-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+    const newNotification = {
+      id,
+      type: options.type || "success",
+      // Default to 'success' if not provided
+      title: options.title,
+      message: options.message,
+      // Ensure duration defaults correctly; nullish coalescing is clean
+      duration: options.duration ?? 3e3,
+      timeoutId: null
+      // Initialize as null
+    };
+    notifications.value.push(newNotification);
+    if (newNotification.duration > 0) {
+      newNotification.timeoutId = setTimeout(() => {
+        removeNotification(newNotification.id);
+      }, newNotification.duration);
+    }
+  };
+  const removeNotification = (id) => {
+    const index = notifications.value.findIndex((n) => n.id === id);
+    if (index !== -1) {
+      const notificationToRemove = notifications.value[index];
+      if (notificationToRemove.timeoutId) {
+        clearTimeout(notificationToRemove.timeoutId);
+      }
+      notifications.value.splice(index, 1);
+    }
+  };
+  const clearAllNotifications = () => {
+    notifications.value.forEach((n) => {
+      if (n.timeoutId) {
+        clearTimeout(n.timeoutId);
+      }
+    });
+    notifications.value = [];
+  };
+  return {
+    notifications,
+    addNotification,
+    removeNotification,
+    clearAllNotifications
+  };
+});
+const _hoisted_1$6 = {
+  key: 0,
+  class: "h-6 w-6",
+  fill: "none",
+  stroke: "currentColor",
+  viewBox: "0 0 24 24",
+  xmlns: "http://www.w3.org/2000/svg"
+};
+const _hoisted_2$6 = ["d"];
+const _hoisted_3$5 = { class: "font-semibold" };
+const _hoisted_4$3 = { class: "text-sm" };
+const _sfc_main$7 = /* @__PURE__ */ defineComponent({
+  __name: "Notification",
+  props: {
+    notification: {}
+  },
+  setup(__props) {
+    const props = __props;
+    const notificationsStore = useNotificationStore();
+    const notificationClasses = computed(() => {
+      const baseClasses = ["text-white"];
+      switch (props.notification.type) {
+        case "success":
+          baseClasses.push("bg-green-500");
+          break;
+        case "error":
+          baseClasses.push("bg-red-500");
+          break;
+        case "warning":
+          baseClasses.push("bg-yellow-500");
+          break;
+        case "info":
+          baseClasses.push("bg-blue-500");
+          break;
+        default:
+          baseClasses.push("bg-gray-700");
+      }
+      return baseClasses.join(" ");
+    });
+    const iconPath = computed(() => {
+      switch (props.notification.type) {
+        case "success":
+          return "M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z";
+        // Checkmark
+        case "error":
+          return "M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z";
+        // X-circle
+        case "warning":
+          return "M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z";
+        // Exclamation triangle
+        case "info":
+          return "M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z";
+        // Info circle
+        default:
+          return "";
+      }
+    });
+    const dismiss = () => {
+      notificationsStore.removeNotification(props.notification.id);
+    };
+    return (_ctx, _cache) => {
+      return openBlock(), createBlock(Transition, {
+        "enter-active-class": "transition ease-out duration-300 transform",
+        "enter-from-class": "opacity-0 translate-x-full",
+        "enter-to-class": "opacity-100 translate-x-0",
+        "leave-active-class": "transition ease-in duration-200 transform",
+        "leave-from-class": "opacity-100 translate-x-0",
+        "leave-to-class": "opacity-0 translate-x-full"
+      }, {
+        default: withCtx(() => [
+          createBaseVNode("div", {
+            class: normalizeClass([notificationClasses.value, "w-full max-w-sm mx-auto mt-2 p-4 rounded-lg shadow-lg flex items-center space-x-3"])
+          }, [
+            iconPath.value ? (openBlock(), createElementBlock("svg", _hoisted_1$6, [
+              createBaseVNode("path", {
+                "stroke-linecap": "round",
+                "stroke-linejoin": "round",
+                "stroke-width": "2",
+                d: iconPath.value
+              }, null, 8, _hoisted_2$6)
+            ])) : createCommentVNode("", true),
+            createBaseVNode("div", null, [
+              createBaseVNode("p", _hoisted_3$5, toDisplayString(_ctx.notification.title), 1),
+              createBaseVNode("p", _hoisted_4$3, toDisplayString(_ctx.notification.message), 1)
+            ]),
+            createBaseVNode("button", {
+              onClick: dismiss,
+              class: "ml-auto text-white hover:opacity-80"
+            }, _cache[0] || (_cache[0] = [
+              createBaseVNode("svg", {
+                class: "h-5 w-5",
+                fill: "none",
+                stroke: "currentColor",
+                viewBox: "0 0 24 24",
+                xmlns: "http://www.w3.org/2000/svg"
+              }, [
+                createBaseVNode("path", {
+                  "stroke-linecap": "round",
+                  "stroke-linejoin": "round",
+                  "stroke-width": "2",
+                  d: "M6 18L18 6M6 6l12 12"
+                })
+              ], -1)
+            ]))
+          ], 2)
+        ]),
+        _: 1
+      });
+    };
+  }
+});
+const _hoisted_1$5 = { class: "fixed bottom-4 right-4 z-[9999] pointer-events-none" };
+const _hoisted_2$5 = { class: "flex flex-col items-end" };
+const _sfc_main$6 = /* @__PURE__ */ defineComponent({
+  __name: "NotificationContainer",
+  setup(__props) {
+    const notificationsStore = useNotificationStore();
+    return (_ctx, _cache) => {
+      return openBlock(), createElementBlock("div", _hoisted_1$5, [
+        createBaseVNode("div", _hoisted_2$5, [
+          (openBlock(true), createElementBlock(Fragment, null, renderList(unref(notificationsStore).notifications, (notification) => {
+            return openBlock(), createBlock(_sfc_main$7, {
+              key: notification.id,
+              notification,
+              class: "pointer-events-auto"
+            }, null, 8, ["notification"]);
+          }), 128))
+        ])
+      ]);
+    };
+  }
+});
 const Config = {
   startCoins: 10,
   baseDimCost: 10,
@@ -15942,7 +16452,7 @@ const game = new Game();
 const __default__ = {
   name: "YellowButton"
 };
-const _sfc_main$6 = /* @__PURE__ */ defineComponent({
+const _sfc_main$5 = /* @__PURE__ */ defineComponent({
   ...__default__,
   emits: ["click"],
   setup(__props, { emit: __emit }) {
@@ -15959,15 +16469,15 @@ const _sfc_main$6 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _hoisted_1$5 = { class: "flex w-full items-center p-2 rounded-lg bg-gradient-to-r from-blue-700/30 via-purple-700/30 to-blue-700/30 rounded-lg mb-3" };
-const _hoisted_2$5 = { class: "flex-2 text-lg font-semibold" };
-const _hoisted_3$5 = { class: "flex-1 text-lg font-semibold" };
+const _hoisted_1$4 = { class: "flex w-full items-center p-2 rounded-lg bg-gradient-to-r from-blue-700/30 via-purple-700/30 to-blue-700/30 rounded-lg mb-3" };
+const _hoisted_2$4 = { class: "flex-2 text-lg font-semibold" };
+const _hoisted_3$4 = { class: "flex-1 text-lg font-semibold" };
 const _hoisted_4$2 = { class: "number-display" };
 const _hoisted_5 = { class: "flex-2 group relative inline-block" };
 const _hoisted_6 = ["disabled"];
 const _hoisted_7 = { class: "opacity-0 z-50 group-hover:opacity-100 absolute top-full left-1/2 -translate-x-1/2 mt-2 w-max p-2 bg-black text-white text-sm rounded-md transition-opacity duration-300 pointer-events-none" };
 const _hoisted_8 = { class: "number-display" };
-const _sfc_main$5 = {
+const _sfc_main$4 = {
   __name: "DimensionsRow",
   props: {
     dimension: Number,
@@ -15982,12 +16492,12 @@ const _sfc_main$5 = {
       }
     };
     return (_ctx, _cache) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$5, [
-        createBaseVNode("div", _hoisted_2$5, [
+      return openBlock(), createElementBlock("div", _hoisted_1$4, [
+        createBaseVNode("div", _hoisted_2$4, [
           createBaseVNode("span", null, toDisplayString(unref(styler).endInt(__props.dimension + 1)), 1),
           _cache[0] || (_cache[0] = createTextVNode(" Antimatter Dimension "))
         ]),
-        createBaseVNode("div", _hoisted_3$5, [
+        createBaseVNode("div", _hoisted_3$4, [
           createBaseVNode("span", _hoisted_4$2, toDisplayString(unref(styler).writeNumber(unref(game).dimensions[__props.dimension])), 1),
           createTextVNode(" [" + toDisplayString(unref(styler).writeNumber(unref(game).dimBought[__props.dimension])) + "] ", 1)
         ]),
@@ -16011,24 +16521,24 @@ const _sfc_main$5 = {
     };
   }
 };
-const _hoisted_1$4 = { class: "h-full flex flex-col items-center justify-start" };
-const _hoisted_2$4 = { class: "mb-8" };
-const _hoisted_3$4 = { class: "font-extrabold text-yellow-300 number-display large" };
+const _hoisted_1$3 = { class: "h-full flex flex-col items-center justify-start" };
+const _hoisted_2$3 = { class: "mb-8" };
+const _hoisted_3$3 = { class: "font-extrabold text-yellow-300 number-display large" };
 const _hoisted_4$1 = { class: "flex-1 min-h-0 w-full flex-col items-center justify-between p-4 shadow-lg rounded-xl mb-4 mx-auto overflow-y-auto" };
-const _sfc_main$4 = {
+const _sfc_main$3 = {
   __name: "Resources",
   setup(__props) {
     return (_ctx, _cache) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$4, [
+      return openBlock(), createElementBlock("div", _hoisted_1$3, [
         _cache[2] || (_cache[2] = createBaseVNode("h1", { class: "text-5xl font-bold mb-6 text-shadow-lg" }, " Idle Clicker ", -1)),
-        createBaseVNode("p", _hoisted_2$4, [
+        createBaseVNode("p", _hoisted_2$3, [
           _cache[0] || (_cache[0] = createTextVNode(" You have ")),
-          createBaseVNode("span", _hoisted_3$4, toDisplayString(unref(game).getCoins()), 1),
+          createBaseVNode("span", _hoisted_3$3, toDisplayString(unref(game).getCoins()), 1),
           _cache[1] || (_cache[1] = createTextVNode(" antimatter. "))
         ]),
         createBaseVNode("div", _hoisted_4$1, [
           (openBlock(), createElementBlock(Fragment, null, renderList(8, (i) => {
-            return createVNode(_sfc_main$5, {
+            return createVNode(_sfc_main$4, {
               key: i,
               dimension: i - 1,
               "on-buy-click": () => unref(game).buyDimension(i - 1)
@@ -16039,20 +16549,20 @@ const _sfc_main$4 = {
     };
   }
 };
-const _hoisted_1$3 = { class: "h-full flex flex-col items-center justify-center" };
-const _hoisted_2$3 = { class: "text-3xl mb-8" };
-const _hoisted_3$3 = { class: "font-extrabold text-yellow-300 number-display" };
-const _sfc_main$3 = /* @__PURE__ */ defineComponent({
+const _hoisted_1$2 = { class: "h-full flex flex-col items-center justify-center" };
+const _hoisted_2$2 = { class: "text-3xl mb-8" };
+const _hoisted_3$2 = { class: "font-extrabold text-yellow-300 number-display" };
+const _sfc_main$2 = /* @__PURE__ */ defineComponent({
   __name: "Science",
   setup(__props) {
     return (_ctx, _cache) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$3, [
+      return openBlock(), createElementBlock("div", _hoisted_1$2, [
         _cache[3] || (_cache[3] = createBaseVNode("h1", { class: "text-5xl font-bold mb-6 text-shadow-lg" }, "Upgrades", -1)),
-        createBaseVNode("p", _hoisted_2$3, [
+        createBaseVNode("p", _hoisted_2$2, [
           _cache[1] || (_cache[1] = createTextVNode("Coins: ")),
-          createBaseVNode("span", _hoisted_3$3, toDisplayString(unref(game).getCoins()), 1)
+          createBaseVNode("span", _hoisted_3$2, toDisplayString(unref(game).getCoins()), 1)
         ]),
-        createVNode(_sfc_main$6, {
+        createVNode(_sfc_main$5, {
           onClick: _cache[0] || (_cache[0] = () => {
           })
         }, {
@@ -16066,141 +16576,76 @@ const _sfc_main$3 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _export_sfc = (sfc, props) => {
-  const target = sfc.__vccOpts || sfc;
-  for (const [key, val] of props) {
-    target[key] = val;
-  }
-  return target;
-};
-const _hoisted_1$2 = {
-  key: 0,
-  class: "fixed bottom-4 right-4 bg-green-500 text-white p-4 rounded-lg shadow-lg flex items-center space-x-3 z-50"
-};
-const _hoisted_2$2 = { class: "font-semibold" };
-const _hoisted_3$2 = { class: "text-sm" };
-const _sfc_main$2 = {
-  __name: "Notification",
-  props: {
-    title: String,
-    message: String,
-    duration: Number
+const NotifUtil = {
+  showSuccess: () => {
+    const notificationsStore = useNotificationStore();
+    notificationsStore.addNotification({
+      title: "Success!",
+      message: "Your operation was completed successfully.",
+      type: "success",
+      duration: 3e3
+    });
   },
-  setup(__props, { expose: __expose }) {
-    const props = __props;
-    const isVisible = ref(false);
-    const timeoutId = ref(null);
-    const currentTitle = ref(props.title);
-    const currentMessage = ref(props.message);
-    const currentDuration = ref(props.duration);
-    const showNotification = (options = {}) => {
-      currentTitle.value = options.title || props.title;
-      currentMessage.value = options.message || props.message;
-      currentDuration.value = options.duration !== void 0 ? options.duration : props.duration;
-      isVisible.value = true;
-      if (timeoutId.value) {
-        clearTimeout(timeoutId.value);
-      }
-      if (currentDuration.value > 0) {
-        timeoutId.value = setTimeout(() => {
-          hideNotification();
-        }, currentDuration.value);
-      }
-    };
-    const hideNotification = () => {
-      isVisible.value = false;
-      if (timeoutId.value) {
-        clearTimeout(timeoutId.value);
-        timeoutId.value = null;
-      }
-    };
-    onUnmounted(() => {
-      if (timeoutId.value) {
-        clearTimeout(timeoutId.value);
-      }
-    });
-    __expose({
-      showNotification,
-      hideNotification
-    });
-    return (_ctx, _cache) => {
-      return openBlock(), createBlock(Transition, {
-        "enter-active-class": "transition ease-out duration-300",
-        "enter-from-class": "opacity-0 translate-x-4",
-        "enter-to-class": "opacity-100 translate-x-0",
-        "leave-active-class": "transition ease-in duration-200",
-        "leave-from-class": "opacity-100 translate-x-0",
-        "leave-to-class": "opacity-0 translate-x-4"
-      }, {
-        default: withCtx(() => [
-          isVisible.value ? (openBlock(), createElementBlock("div", _hoisted_1$2, [
-            _cache[1] || (_cache[1] = createBaseVNode("svg", {
-              class: "h-6 w-6",
-              fill: "none",
-              stroke: "currentColor",
-              viewBox: "0 0 24 24",
-              xmlns: "http://www.w3.org/2000/svg"
-            }, [
-              createBaseVNode("path", {
-                "stroke-linecap": "round",
-                "stroke-linejoin": "round",
-                "stroke-width": "2",
-                d: "M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-              })
-            ], -1)),
-            createBaseVNode("div", null, [
-              createBaseVNode("p", _hoisted_2$2, toDisplayString(currentTitle.value), 1),
-              createBaseVNode("p", _hoisted_3$2, toDisplayString(currentMessage.value), 1)
-            ]),
-            createBaseVNode("button", {
-              onClick: hideNotification,
-              class: "ml-4 text-white hover:text-green-100"
-            }, _cache[0] || (_cache[0] = [
-              createBaseVNode("svg", {
-                class: "h-5 w-5",
-                fill: "none",
-                stroke: "currentColor",
-                viewBox: "0 0 24 24",
-                xmlns: "http://www.w3.org/2000/svg"
-              }, [
-                createBaseVNode("path", {
-                  "stroke-linecap": "round",
-                  "stroke-linejoin": "round",
-                  "stroke-width": "2",
-                  d: "M6 18L18 6M6 6l12 12"
-                })
-              ], -1)
-            ]))
-          ])) : createCommentVNode("", true)
-        ]),
-        _: 1
-      });
-    };
-  }
-};
-const Notification = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["__scopeId", "data-v-cc234781"]]);
-const _hoisted_1$1 = { class: "h-full flex flex-col items-center justify-center" };
-const _hoisted_2$1 = { class: "text-3xl mb-8" };
-const _hoisted_3$1 = { class: "font-extrabold text-yellow-300 number-display" };
-const notificationRef = ref(null);
-function showNotif(s = "Game saved!") {
-  if (notificationRef.value) {
-    notificationRef.value.showNotification({
+  showSuccessNotif(s = "Game saved!") {
+    const notificationsStore = useNotificationStore();
+    notificationsStore.addNotification({
       title: s,
       message: "",
+      type: "success",
       duration: 3e3
       // 3 seconds
     });
+  },
+  showError: () => {
+    const notificationsStore = useNotificationStore();
+    notificationsStore.addNotification({
+      title: "Error!",
+      message: "Something went wrong. Please try again.",
+      type: "error",
+      duration: 5e3
+    });
+  },
+  showFailedNotif(s = "Game saved!") {
+    const notificationsStore = useNotificationStore();
+    notificationsStore.addNotification({
+      title: s,
+      message: "",
+      type: "error",
+      duration: 3e3
+      // 3 seconds
+    });
+  },
+  showWarning: () => {
+    const notificationsStore = useNotificationStore();
+    notificationsStore.addNotification({
+      title: "Warning!",
+      message: "Some data might be incomplete.",
+      type: "warning",
+      duration: 4e3
+    });
+  },
+  showInfo: () => {
+    const notificationsStore = useNotificationStore();
+    notificationsStore.addNotification({
+      title: "Information",
+      message: "This is a piece of information that requires your attention.",
+      type: "info",
+      duration: 0
+      // Indefinite, requires manual close
+    });
   }
-}
+};
+const _hoisted_1$1 = { class: "h-full flex flex-col items-center justify-center" };
+const _hoisted_2$1 = { class: "text-3xl mb-8" };
+const _hoisted_3$1 = { class: "font-extrabold text-yellow-300 number-display" };
 async function exportSave() {
   try {
     const save = game.exportSave();
     navigator.clipboard.writeText(save);
-    showNotif("Save copied to clipboard!");
+    NotifUtil.showSuccessNotif("Save copied to clipboard!");
   } catch (err) {
     console.error("Failed to copy text: ", err);
-    showNotif("Failed to save");
+    NotifUtil.showFailedNotif("Failed to save");
   }
 }
 const _sfc_main$1 = /* @__PURE__ */ defineComponent({
@@ -16213,10 +16658,10 @@ const _sfc_main$1 = /* @__PURE__ */ defineComponent({
           _cache[1] || (_cache[1] = createTextVNode("Coins: ")),
           createBaseVNode("span", _hoisted_3$1, toDisplayString(unref(game).getCoins()), 1)
         ]),
-        createVNode(_sfc_main$6, {
+        createVNode(_sfc_main$5, {
           onClick: _cache[0] || (_cache[0] = () => {
             unref(game).save();
-            showNotif();
+            unref(NotifUtil).showSuccessNotif();
           })
         }, {
           default: withCtx(() => _cache[2] || (_cache[2] = [
@@ -16225,17 +16670,13 @@ const _sfc_main$1 = /* @__PURE__ */ defineComponent({
           _: 1,
           __: [2]
         }),
-        createVNode(_sfc_main$6, { onClick: exportSave }, {
+        createVNode(_sfc_main$5, { onClick: exportSave }, {
           default: withCtx(() => _cache[3] || (_cache[3] = [
             createTextVNode(" Export ")
           ])),
           _: 1,
           __: [3]
-        }),
-        createVNode(Notification, {
-          ref_key: "notificationRef",
-          ref: notificationRef
-        }, null, 512)
+        })
       ]);
     };
   }
@@ -16248,8 +16689,8 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
   __name: "App",
   setup(__props) {
     const tabs = [
-      { name: "resources", label: "Resources", component: _sfc_main$4 },
-      { name: "science", label: "Science", component: _sfc_main$3 },
+      { name: "resources", label: "Resources", component: _sfc_main$3 },
+      { name: "science", label: "Science", component: _sfc_main$2 },
       { name: "options", label: "Options", component: _sfc_main$1 }
     ];
     const activeTab = ref(tabs[0].name);
@@ -16275,11 +16716,21 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
         ]),
         createBaseVNode("div", _hoisted_4, [
           (openBlock(), createBlock(resolveDynamicComponent(currentComponent.value)))
-        ])
+        ]),
+        createVNode(_sfc_main$6)
       ]);
     };
   }
 });
-const App = /* @__PURE__ */ _export_sfc(_sfc_main, [["__scopeId", "data-v-a94d01cc"]]);
+const _export_sfc = (sfc, props) => {
+  const target = sfc.__vccOpts || sfc;
+  for (const [key, val] of props) {
+    target[key] = val;
+  }
+  return target;
+};
+const App = /* @__PURE__ */ _export_sfc(_sfc_main, [["__scopeId", "data-v-fb382788"]]);
 const app = createApp(App);
+const pinia = createPinia();
+app.use(pinia);
 app.mount("#app");
