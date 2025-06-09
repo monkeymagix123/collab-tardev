@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/require-toggle-inside-transition -->
 <template>
 	<transition
 		enter-active-class="transition ease-out duration-300 transform"

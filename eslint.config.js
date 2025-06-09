@@ -14,4 +14,10 @@ export default [
   ...pluginVue.configs['flat/essential'],
   ...vueTsEslintConfig(),
   skipFormatting,
+  {
+    files: ['src/tabs/**/*.{js,vue}'],
+    rules: {
+      'vue/multi-word-component-names': 'off',
+    }
+  }
 ];

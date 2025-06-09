@@ -23,9 +23,8 @@
 	</div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 	import game from '../setup';
 	import YellowButton from '../components/YellowButton.vue';
-	import { styler } from '../styler';
 	import DimensionsRow from '../components/DimensionsRow.vue';
 </script>

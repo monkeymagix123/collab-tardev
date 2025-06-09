@@ -10,11 +10,11 @@
 
 		<!-- <p class="text-3xl mb-8">Dimensions: <span class="font-extrabold text-yellow-300">{{ game.dimensions[0] }}</span></p> -->
 
-		<YellowButton @click=""> hi </YellowButton>
+		<!-- <YellowButton @click=""> hi </YellowButton> -->
 	</div>
 </template>
 
 <script setup lang="ts">
 	import game from '../setup';
-	import YellowButton from '../components/YellowButton.vue';
+	// import YellowButton from '../components/YellowButton.vue';
 </script>

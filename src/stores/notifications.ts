@@ -9,7 +9,7 @@ export interface Notification {
 	title: string;
 	message: string;
 	duration: number; // Duration in ms; 0 for indefinite
-	timeoutId: ReturnType<typeof setTimeout> | null; // Stores the timeout ID for clearing
+	timeoutId: ReturnType<typeof setTimeout> | undefined; // Stores the timeout ID for clearing
 }
 
 export const useNotificationStore = defineStore('notification', () => {
@@ -39,7 +39,7 @@ export const useNotificationStore = defineStore('notification', () => {
 			message: options.message,
 			// Ensure duration defaults correctly; nullish coalescing is clean
 			duration: options.duration ?? 3000,
-			timeoutId: null, // Initialize as null
+			timeoutId: undefined, // Initialize as null
 		};
 
 		notifications.value.push(newNotification);
