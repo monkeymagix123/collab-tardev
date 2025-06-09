@@ -81,7 +81,7 @@ export class Game {
 		while (this.canBuyTickspeed()) {
 			this.buyTickspeed();
 		}
-		
+
 		// do cheapest
 		while (true) {
 			let minCost = Number.MAX_VALUE;
@@ -110,7 +110,10 @@ export class Game {
 	}
 
 	calculateTickspeedCost() {
-		return Math.round(Config.tickspeedBaseCost * Math.pow(Config.tickspeedScale, this.tickspeed.value));
+		return Math.round(
+			Config.tickspeedBaseCost *
+				Math.pow(Config.tickspeedScale, this.tickspeed.value)
+		);
 	}
 
 	canBuyTickspeed() {
@@ -128,7 +131,9 @@ export class Game {
 
 	calculateDimensionCost(i: number) {
 		return Math.round(
-			Math.pow(Config.baseDimCost, i + 1) * Math.pow(Config.baseDimCost, Math.floor(i / 3)) * Math.pow(Config.scale, this.dimBought[i])
+			Math.pow(Config.baseDimCost, i + 1) *
+				Math.pow(Config.baseDimCost, Math.floor(i / 3)) *
+				Math.pow(Config.scale, this.dimBought[i])
 		);
 	}
 
@@ -249,5 +254,5 @@ export class Game {
 
 		console.log('After load - coins:', this.coins.value);
 		console.log(this.dimensions[0]);
-	}
+	};
 }

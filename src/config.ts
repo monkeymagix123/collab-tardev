@@ -1,6 +1,6 @@
 export const Config = {
 	dimensions: 8,
-	
+
 	startCoins: 10,
 
 	tickspeedMultiplier: 1.1245,
