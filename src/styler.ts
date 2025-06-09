@@ -30,7 +30,7 @@ export const styler = {
         units = units.reverse();
 
         if (a >= 1e36) {
-            return a.toPrecision(3);
+            return a.toPrecision(3).replace('e+', 'e');
         }
 
         for (const unit of units) {
