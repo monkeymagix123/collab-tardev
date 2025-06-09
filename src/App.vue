@@ -53,6 +53,35 @@
     const currentComponent = computed(() => {
         return tabs.find(tab => tab.name === activeTab.value)?.component || null
     })
+
+    import { onMounted, onBeforeUnmount } from 'vue';
+    import game from './setup';
+
+    const handleGlobalKeyPress = (event: { key: string; }) => {
+        if (event.key === 'm' || event.key === 'M') {
+            // console.log('Global "A" key pressed!');
+            game.buyMax();
+            // Prevent default browser behavior if needed, e.g., if 'A' is part of a shortcut
+            // event.preventDefault();
+        }
+        // You can add more conditions for other keys here
+        if (event.key === 'Escape') {
+            console.log('Escape key pressed globally!');
+        }
+    };
+
+    onMounted(() => {
+        // Add the global keydown listener when the component is mounted
+        document.addEventListener('keydown', handleGlobalKeyPress);
+        console.log('Global keydown listener added.');
+    });
+
+    onBeforeUnmount(() => {
+        // Remove the global keydown listener before the component is unmounted
+        // This is crucial to prevent memory leaks and unintended behavior
+        document.removeEventListener('keydown', handleGlobalKeyPress);
+        console.log('Global keydown listener removed.');
+    });
 </script>
 
 <style scoped>
