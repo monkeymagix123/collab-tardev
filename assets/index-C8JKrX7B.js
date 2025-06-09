@@ -16282,13 +16282,19 @@ const Config = {
 const styler = {
   writeFullNumber: function(a) {
     if (a < 10) {
-      return a.toLocaleString(void 0, { minimumSignificantDigits: 2, maximumSignificantDigits: 2 });
+      return a.toLocaleString(void 0, {
+        minimumSignificantDigits: 2,
+        maximumSignificantDigits: 2
+      });
     }
     return a.toLocaleString(void 0, { maximumFractionDigits: 0 });
   },
   writeNumber: function(a) {
     if (a < 10) {
-      return a.toLocaleString(void 0, { minimumSignificantDigits: 2, maximumSignificantDigits: 2 });
+      return a.toLocaleString(void 0, {
+        minimumSignificantDigits: 2,
+        maximumSignificantDigits: 2
+      });
     }
     let units = [
       { value: 1e3, suffix: "K" },
@@ -16521,7 +16527,10 @@ const _sfc_main$4 = {
         createBaseVNode("div", _hoisted_7, [
           createBaseVNode("button", {
             onClick: handleButtonClick,
-            class: normalizeClass(["w-full px-6 py-2 text-white font-bold rounded-lg shadow-md", unref(game).canBuyDimension(__props.dimension) ? "bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 transition duration-300 ease-in-out transform hover:scale-105" : "bg-blue-800/70"]),
+            class: normalizeClass([
+              "w-full px-6 py-2 text-white font-bold rounded-lg shadow-md",
+              unref(game).canBuyDimension(__props.dimension) ? "bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 transition duration-300 ease-in-out transform hover:scale-105" : "bg-blue-800/70"
+            ]),
             disabled: !unref(game).canBuyDimension(__props.dimension)
           }, [
             _cache[2] || (_cache[2] = createTextVNode(" Buy 1 for ")),
@@ -16547,7 +16556,7 @@ const _sfc_main$3 = {
   setup(__props) {
     return (_ctx, _cache) => {
       return openBlock(), createElementBlock("div", _hoisted_1$3, [
-        _cache[3] || (_cache[3] = createBaseVNode("h1", { class: "text-5xl font-bold mb-6 text-shadow-lg" }, " Idle Clicker ", -1)),
+        _cache[3] || (_cache[3] = createBaseVNode("h1", { class: "text-5xl font-bold mb-6 text-shadow-lg" }, "Idle Clicker", -1)),
         createBaseVNode("p", _hoisted_2$3, [
           _cache[0] || (_cache[0] = createTextVNode(" You have ")),
           createBaseVNode("span", _hoisted_3$3, toDisplayString(unref(game).getCoins()), 1),
@@ -16585,7 +16594,7 @@ const _sfc_main$2 = /* @__PURE__ */ defineComponent({
       return openBlock(), createElementBlock("div", _hoisted_1$2, [
         _cache[3] || (_cache[3] = createBaseVNode("h1", { class: "text-5xl font-bold mb-6 text-shadow-lg" }, "Upgrades", -1)),
         createBaseVNode("p", _hoisted_2$2, [
-          _cache[1] || (_cache[1] = createTextVNode("Coins: ")),
+          _cache[1] || (_cache[1] = createTextVNode(" Coins: ")),
           createBaseVNode("span", _hoisted_3$2, toDisplayString(unref(game).getCoins()), 1)
         ]),
         createVNode(_sfc_main$5, {
@@ -16681,7 +16690,7 @@ const _sfc_main$1 = /* @__PURE__ */ defineComponent({
       return openBlock(), createElementBlock("div", _hoisted_1$1, [
         _cache[4] || (_cache[4] = createBaseVNode("h1", { class: "text-5xl font-bold mb-6 text-shadow-lg" }, "Upgrades", -1)),
         createBaseVNode("p", _hoisted_2$1, [
-          _cache[1] || (_cache[1] = createTextVNode("Coins: ")),
+          _cache[1] || (_cache[1] = createTextVNode(" Coins: ")),
           createBaseVNode("span", _hoisted_3$1, toDisplayString(unref(game).getCoins()), 1)
         ]),
         createVNode(_sfc_main$5, {
@@ -16771,7 +16780,7 @@ const _export_sfc = (sfc, props) => {
   }
   return target;
 };
-const App = /* @__PURE__ */ _export_sfc(_sfc_main, [["__scopeId", "data-v-36d53d25"]]);
+const App = /* @__PURE__ */ _export_sfc(_sfc_main, [["__scopeId", "data-v-3658531e"]]);
 const app = createApp(App);
 const pinia = createPinia();
 app.use(pinia);
