@@ -26,7 +26,7 @@
     </div>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
     import { ref, computed } from 'vue';
     import NotificationContainer from './components/NotificationContainer.vue';
 
@@ -55,20 +55,7 @@
     })
 
     import { onMounted, onBeforeUnmount } from 'vue';
-    import game from './setup';
-
-    const handleGlobalKeyPress = (event: { key: string; }) => {
-        if (event.key === 'm' || event.key === 'M') {
-            // console.log('Global "A" key pressed!');
-            game.buyMax();
-            // Prevent default browser behavior if needed, e.g., if 'A' is part of a shortcut
-            // event.preventDefault();
-        }
-        // You can add more conditions for other keys here
-        if (event.key === 'Escape') {
-            console.log('Escape key pressed globally!');
-        }
-    };
+    import { handleGlobalKeyPress } from './utilities/keybindUtil';
 
     onMounted(() => {
         // Add the global keydown listener when the component is mounted
