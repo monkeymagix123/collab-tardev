@@ -16275,7 +16275,11 @@ const _sfc_main$6 = /* @__PURE__ */ defineComponent({
   }
 });
 const Config = {
+  dimensions: 8,
   startCoins: 10,
+  tickspeedMultiplier: 1.1245,
+  tickspeedBaseCost: 1e3,
+  tickspeedScale: 10,
   baseDimCost: 10,
   scale: 1.2
 };
@@ -16351,10 +16355,13 @@ class Game {
      * When `coins.value` changes, Vue automatically knows to re-render parts of the UI that depend on it.
      */
     __publicField(this, "coins", ref(Config.startCoins));
-    __publicField(this, "dimensions", reactive(new Array(8).fill(0)));
-    __publicField(this, "dimBought", reactive(new Array(8).fill(0)));
-    // dimRef = reactive(new Array(8));
+    __publicField(this, "tickspeed", ref(1));
+    __publicField(this, "dimensions", reactive(new Array(Config.dimensions).fill(0)));
+    __publicField(this, "dimBought", reactive(new Array(Config.dimensions).fill(0)));
     __publicField(this, "time", -1);
+    // intervals
+    __publicField(this, "autoSaveInterval");
+    __publicField(this, "updateInterval");
     /**
      * A computed property that calculates coins gained per click.
      * `computed` properties are reactive and automatically re-evaluate when their dependencies change.
@@ -16369,6 +16376,9 @@ class Game {
       this.coins.value += this.coinsPerClick.value;
     });
     __publicField(this, "buyMax", () => {
+      while (this.canBuyTickspeed()) {
+        this.buyTickspeed();
+      }
       while (true) {
         let minCost = Number.MAX_VALUE;
         let cheapest = 0;
@@ -16385,6 +16395,24 @@ class Game {
         this.buyDimension(cheapest);
       }
     });
+    __publicField(this, "reset", () => {
+      console.log("Before load - coins:", this.coins.value);
+      console.log(this.dimensions[0]);
+      const fresh = new Game();
+      clearInterval(this.autoSaveInterval);
+      clearInterval(this.updateInterval);
+      this.load(fresh.getSave());
+      this.coins.value = Config.startCoins;
+      this.tickspeed.value = 0;
+      this.dimensions.fill(0);
+      this.dimBought.fill(0);
+      this.time = Date.now();
+      this.autoSaveInterval = setInterval(() => this.save(), 33);
+      this.updateInterval = setInterval(() => this.doUpdate(), 33);
+      this.save();
+      console.log("After load - coins:", this.coins.value);
+      console.log(this.dimensions[0]);
+    });
     const localSave = localStorage.getItem("saveData");
     if (localSave) {
       this.load(JSON.parse(localSave));
@@ -16393,8 +16421,8 @@ class Game {
       this.update((Date.now() - this.time) / 1e3);
     this.time = Date.now();
     this.save();
-    setInterval(() => this.doUpdate(), 33);
-    setInterval(() => this.save(), 33);
+    this.updateInterval = setInterval(() => this.doUpdate(), 33);
+    this.autoSaveInterval = setInterval(() => this.save(), 33);
   }
   doUpdate() {
     const dt = Date.now() - this.time;
@@ -16410,10 +16438,25 @@ class Game {
   }
   calculateDimMultiplier(i) {
     const m = Math.pow(1.02, this.dimBought[i]);
-    return m;
+    const t = Math.pow(Config.tickspeedMultiplier, this.tickspeed.value);
+    return m * t;
+  }
+  calculateTickspeedCost() {
+    return Math.round(Config.tickspeedBaseCost * Math.pow(Config.tickspeedScale, this.tickspeed.value));
+  }
+  canBuyTickspeed() {
+    const nextCost = this.calculateTickspeedCost();
+    return this.coins.value >= nextCost;
+  }
+  buyTickspeed() {
+    const nextCost = this.calculateTickspeedCost();
+    if (this.canBuyTickspeed()) {
+      this.tickspeed.value++;
+      this.coins.value -= nextCost;
+    }
   }
   calculateDimensionCost(i) {
-    return Math.round(Math.pow(Config.baseDimCost, i) * Math.pow(Config.scale, this.dimBought[i]));
+    return Math.round(Math.pow(Config.baseDimCost, i + 1) * Math.pow(Config.baseDimCost, Math.floor(i / 3)) * Math.pow(Config.scale, this.dimBought[i]));
   }
   canBuyDimension(i) {
     const nextCost = this.calculateDimensionCost(i);
@@ -16453,6 +16496,9 @@ class Game {
   getSave() {
     const result = {};
     for (const key in this) {
+      if (key.includes("interval")) {
+        continue;
+      }
       const val = this[key];
       if (val && typeof val === "object" && "value" in val) {
         result[key] = val.value;
@@ -16488,7 +16534,7 @@ const _sfc_main$5 = /* @__PURE__ */ defineComponent({
     function onClick() {
       emit2("click");
     }
-    const buttonClasses = "bg-yellow-400 hover:bg-yellow-500 text-purple-900 font-bold py-4 px-8 rounded-2xl shadow-lg transform transition-all duration-200 ease-in-out active:scale-95 focus:outline-none focus:ring-4 focus:ring-yellow-300 focus:ring-opacity-75 text-2xl";
+    const buttonClasses = "bg-yellow-400 hover:bg-yellow-500 text-purple-900 font-bold m-4 py-4 px-8 rounded-2xl shadow-lg transform transition-all duration-200 ease-in-out active:scale-95 focus:outline-none focus:ring-4 focus:ring-yellow-300 focus:ring-opacity-75 text-2xl";
     return (_ctx, _cache) => {
       return openBlock(), createElementBlock("button", {
         class: normalizeClass(buttonClasses),
@@ -16505,10 +16551,10 @@ const _hoisted_1$4 = { class: "flex w-full items-center p-2 rounded-lg bg-gradie
 const _hoisted_2$4 = { class: "flex-[2] text-lg font-semibold" };
 const _hoisted_3$4 = { class: "flex-1 text-lg font-semibold" };
 const _hoisted_4$2 = { class: "number-display" };
-const _hoisted_5 = { class: "flex-1 text-lg font-semibold" };
-const _hoisted_6 = { class: "number-display" };
-const _hoisted_7 = { class: "flex-[1.5] group relative inline-block" };
-const _hoisted_8 = ["disabled"];
+const _hoisted_5$1 = { class: "flex-1 text-lg font-semibold" };
+const _hoisted_6$1 = { class: "number-display" };
+const _hoisted_7$1 = { class: "flex-[1.5] group relative inline-block" };
+const _hoisted_8$1 = ["disabled"];
 const _hoisted_9 = { class: "opacity-0 z-50 group-hover:opacity-100 absolute top-full left-1/2 -translate-x-1/2 mt-2 w-max p-2 bg-black text-white text-sm rounded-md transition-opacity duration-300 pointer-events-none" };
 const _hoisted_10 = { class: "number-display" };
 const _sfc_main$4 = /* @__PURE__ */ defineComponent({
@@ -16535,10 +16581,10 @@ const _sfc_main$4 = /* @__PURE__ */ defineComponent({
           _cache[1] || (_cache[1] = createBaseVNode("span", { class: "font-normal" }, "×", -1)),
           createBaseVNode("span", _hoisted_4$2, toDisplayString(unref(styler).writeNumber(unref(game).calculateDimMultiplier(__props.dimension))), 1)
         ]),
-        createBaseVNode("div", _hoisted_5, [
-          createBaseVNode("span", _hoisted_6, toDisplayString(unref(styler).writeNumber(unref(game).dimensions[__props.dimension])), 1)
+        createBaseVNode("div", _hoisted_5$1, [
+          createBaseVNode("span", _hoisted_6$1, toDisplayString(unref(styler).writeNumber(unref(game).dimensions[__props.dimension])), 1)
         ]),
-        createBaseVNode("div", _hoisted_7, [
+        createBaseVNode("div", _hoisted_7$1, [
           createBaseVNode("button", {
             onClick: handleButtonClick,
             class: normalizeClass([
@@ -16549,7 +16595,7 @@ const _sfc_main$4 = /* @__PURE__ */ defineComponent({
           }, [
             _cache[2] || (_cache[2] = createTextVNode(" Buy 1 for ")),
             createBaseVNode("span", null, toDisplayString(unref(styler).writeNumber(unref(game).calculateDimensionCost(__props.dimension))), 1)
-          ], 10, _hoisted_8),
+          ], 10, _hoisted_8$1),
           createBaseVNode("div", _hoisted_9, [
             _cache[3] || (_cache[3] = createTextVNode(" Purchased ")),
             createBaseVNode("span", _hoisted_10, toDisplayString(unref(game).dimBought[__props.dimension]), 1),
@@ -16562,37 +16608,60 @@ const _sfc_main$4 = /* @__PURE__ */ defineComponent({
   }
 });
 const _hoisted_1$3 = { class: "h-full flex flex-col items-center justify-start" };
-const _hoisted_2$3 = { class: "mb-8" };
+const _hoisted_2$3 = { class: "mb-4" };
 const _hoisted_3$3 = { class: "font-extrabold text-yellow-300 number-display large" };
-const _hoisted_4$1 = { class: "flex-1 min-h-0 w-full flex-col items-center justify-between p-4 shadow-lg rounded-xl mb-4 mx-auto overflow-y-auto" };
+const _hoisted_4$1 = { class: "group relative inline-block" };
+const _hoisted_5 = ["disabled"];
+const _hoisted_6 = { class: "opacity-0 z-50 group-hover:opacity-100 absolute top-full left-1/2 -translate-x-1/2 mt-2 w-max p-2 bg-black text-white text-sm rounded-md transition-opacity duration-300 pointer-events-none" };
+const _hoisted_7 = { class: "number-display" };
+const _hoisted_8 = { class: "flex-1 min-h-0 w-full flex-col items-center justify-between p-4 shadow-lg rounded-xl mb-4 mx-auto overflow-y-auto" };
 const _sfc_main$3 = /* @__PURE__ */ defineComponent({
   __name: "Resources",
   setup(__props) {
     return (_ctx, _cache) => {
       return openBlock(), createElementBlock("div", _hoisted_1$3, [
-        _cache[3] || (_cache[3] = createBaseVNode("h1", { class: "text-5xl font-bold mb-6 text-shadow-lg" }, "Idle Clicker", -1)),
+        _cache[7] || (_cache[7] = createBaseVNode("h1", { class: "text-5xl font-bold mb-6 text-shadow-lg" }, "Idle Clicker", -1)),
         createBaseVNode("p", _hoisted_2$3, [
-          _cache[0] || (_cache[0] = createTextVNode(" You have ")),
+          _cache[1] || (_cache[1] = createTextVNode(" You have ")),
           createBaseVNode("span", _hoisted_3$3, toDisplayString(unref(game).getCoins()), 1),
-          _cache[1] || (_cache[1] = createTextVNode(" antimatter. "))
+          _cache[2] || (_cache[2] = createTextVNode(" antimatter. "))
+        ]),
+        createBaseVNode("div", _hoisted_4$1, [
+          createBaseVNode("button", {
+            onClick: _cache[0] || (_cache[0] = //@ts-ignore
+            (...args) => unref(game).buyTickspeed && unref(game).buyTickspeed(...args)),
+            class: normalizeClass([
+              "w-full px-6 py-2 text-white font-bold rounded-lg shadow-md",
+              unref(game).canBuyTickspeed() ? "bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 transition duration-300 ease-in-out transform hover:scale-105" : "bg-blue-800/70"
+            ]),
+            disabled: !unref(game).canBuyTickspeed()
+          }, [
+            _cache[3] || (_cache[3] = createTextVNode(" Buy 1 for ")),
+            createBaseVNode("span", null, toDisplayString(unref(styler).writeNumber(unref(game).calculateTickspeedCost())), 1)
+          ], 10, _hoisted_5),
+          createBaseVNode("div", _hoisted_6, [
+            _cache[4] || (_cache[4] = createTextVNode(" Purchased ")),
+            createBaseVNode("span", _hoisted_7, toDisplayString(unref(game).tickspeed), 1),
+            _cache[5] || (_cache[5] = createTextVNode(" times "))
+          ])
         ]),
         createVNode(_sfc_main$5, {
           onClick: unref(game).buyMax
         }, {
-          default: withCtx(() => _cache[2] || (_cache[2] = [
+          default: withCtx(() => _cache[6] || (_cache[6] = [
             createTextVNode(" Buy Max (M) ")
           ])),
           _: 1,
-          __: [2]
+          __: [6]
         }, 8, ["onClick"]),
-        createBaseVNode("div", _hoisted_4$1, [
-          (openBlock(), createElementBlock(Fragment, null, renderList(8, (i) => {
-            return createVNode(_sfc_main$4, {
+        createBaseVNode("div", _hoisted_8, [
+          (openBlock(true), createElementBlock(Fragment, null, renderList(unref(Config).dimensions, (i) => {
+            return openBlock(), createBlock(_sfc_main$4, {
               key: i,
               dimension: i - 1,
               "on-buy-click": () => unref(game).buyDimension(i - 1)
             }, null, 8, ["dimension", "on-buy-click"]);
-          }), 64))
+          }), 128))
         ])
       ]);
     };
@@ -16692,7 +16761,7 @@ const _sfc_main$1 = /* @__PURE__ */ defineComponent({
     }
     return (_ctx, _cache) => {
       return openBlock(), createElementBlock("div", _hoisted_1$1, [
-        _cache[4] || (_cache[4] = createBaseVNode("h1", { class: "text-5xl font-bold mb-6 text-shadow-lg" }, "Upgrades", -1)),
+        _cache[5] || (_cache[5] = createBaseVNode("h1", { class: "text-5xl font-bold mb-6 text-shadow-lg" }, "Upgrades", -1)),
         createBaseVNode("p", _hoisted_2$1, [
           _cache[1] || (_cache[1] = createTextVNode(" Coins: ")),
           createBaseVNode("span", _hoisted_3$1, toDisplayString(unref(game).getCoins()), 1)
@@ -16715,7 +16784,16 @@ const _sfc_main$1 = /* @__PURE__ */ defineComponent({
           ])),
           _: 1,
           __: [3]
-        })
+        }),
+        createVNode(_sfc_main$5, {
+          onClick: unref(game).reset
+        }, {
+          default: withCtx(() => _cache[4] || (_cache[4] = [
+            createTextVNode(" Hard Reset ")
+          ])),
+          _: 1,
+          __: [4]
+        }, 8, ["onClick"])
       ]);
     };
   }
