@@ -1,5 +1,5 @@
 <template>
-	<div class="h-full flex flex-col items-center justify-center">
+	<div class="h-full flex flex-col items-center">
 		<h1 class="text-5xl font-bold mb-6 text-shadow-lg">Upgrades</h1>
 		<p class="text-3xl mb-8">
 			Coins:
@@ -22,19 +22,12 @@
 		</YellowButton>
 
 		<YellowButton @click="exportSave"> Export </YellowButton>
-
-		<!-- <Notification ref="notificationRef" /> -->
 	</div>
 </template>
 
 <script setup lang="ts">
 	import game from '../setup';
 	import YellowButton from '../components/YellowButton.vue';
-	import { ref } from 'vue';
-	import Notification from '../components/Notification.vue';
-</script>
-
-<script lang="ts">
 	import { NotifUtil } from '../utilities/notificationUtil';
 
 	async function exportSave(): Promise<void> {
