@@ -4,7 +4,9 @@ export default [
 	{
 		files: ['*.js', '*.ts', '*.vue'],
 		languageOptions: {
+			parser: 'vue-eslint-parser',
 			parserOptions: {
+				parser: '@babel/eslint-parser', // or your preferred parser for JS inside <script>
 				ecmaVersion: 'latest',
 				sourceType: 'module',
 			},
