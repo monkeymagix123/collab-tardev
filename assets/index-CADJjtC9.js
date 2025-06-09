@@ -16106,7 +16106,7 @@ const useNotificationStore = /* @__PURE__ */ defineStore("notification", () => {
       message: options.message,
       // Ensure duration defaults correctly; nullish coalescing is clean
       duration: options.duration ?? 3e3,
-      timeoutId: null
+      timeoutId: void 0
       // Initialize as null
     };
     notifications.value.push(newNotification);
@@ -16555,7 +16555,7 @@ const _hoisted_1$3 = { class: "h-full flex flex-col items-center justify-start" 
 const _hoisted_2$3 = { class: "mb-8" };
 const _hoisted_3$3 = { class: "font-extrabold text-yellow-300 number-display large" };
 const _hoisted_4$1 = { class: "flex-1 min-h-0 w-full flex-col items-center justify-between p-4 shadow-lg rounded-xl mb-4 mx-auto overflow-y-auto" };
-const _sfc_main$3 = {
+const _sfc_main$3 = /* @__PURE__ */ defineComponent({
   __name: "Resources",
   setup(__props) {
     return (_ctx, _cache) => {
@@ -16587,7 +16587,7 @@ const _sfc_main$3 = {
       ]);
     };
   }
-};
+});
 const _hoisted_1$2 = { class: "h-full flex flex-col items-center justify-center" };
 const _hoisted_2$2 = { class: "text-3xl mb-8" };
 const _hoisted_3$2 = { class: "font-extrabold text-yellow-300 number-display" };
@@ -16596,21 +16596,11 @@ const _sfc_main$2 = /* @__PURE__ */ defineComponent({
   setup(__props) {
     return (_ctx, _cache) => {
       return openBlock(), createElementBlock("div", _hoisted_1$2, [
-        _cache[3] || (_cache[3] = createBaseVNode("h1", { class: "text-5xl font-bold mb-6 text-shadow-lg" }, "Upgrades", -1)),
+        _cache[1] || (_cache[1] = createBaseVNode("h1", { class: "text-5xl font-bold mb-6 text-shadow-lg" }, "Upgrades", -1)),
         createBaseVNode("p", _hoisted_2$2, [
-          _cache[1] || (_cache[1] = createTextVNode(" Coins: ")),
+          _cache[0] || (_cache[0] = createTextVNode(" Coins: ")),
           createBaseVNode("span", _hoisted_3$2, toDisplayString(unref(game).getCoins()), 1)
-        ]),
-        createVNode(_sfc_main$5, {
-          onClick: _cache[0] || (_cache[0] = () => {
-          })
-        }, {
-          default: withCtx(() => _cache[2] || (_cache[2] = [
-            createTextVNode(" hi ")
-          ])),
-          _: 1,
-          __: [2]
-        })
+        ])
       ]);
     };
   }
