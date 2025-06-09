@@ -1,4 +1,4 @@
-import { createApp, ref, computed, reactive } from 'vue';
+import { ref, computed, reactive } from 'vue';
 import { Config } from './config';
 import { styler } from './styler';
 
@@ -134,8 +134,8 @@ export class Game {
 		return JSON.parse(json);
 	}
 
-	getSave(): Record<string, any> {
-		const result: Record<string, any> = {};
+	getSave(): Record<string, unknown> {
+		const result: Record<string, unknown> = {};
 		for (const key in this) {
 			const val = this[key];
 			if (val && typeof val === 'object' && 'value' in val) {
@@ -147,7 +147,7 @@ export class Game {
 		return result;
 	}
 
-	load(data: Record<string, any>) {
+	load(data: Record<string, unknown>) {
 		// return Object.assign(this, data);
 		for (const key in data) {
 			if (key in this) {
@@ -155,9 +155,9 @@ export class Game {
 
 				const prop = this[typedKey];
 				if (prop && typeof prop === 'object' && 'value' in prop) {
-					(prop as { value: any }).value = data[key];
+					(prop as { value: unknown }).value = data[key];
 				} else {
-					(this as any)[key] = data[key]; // fallback for non-ref fields
+					(this as Record<string, unknown>)[key] = data[key]; // fallback for non-ref fields
 				}
 			}
 		}

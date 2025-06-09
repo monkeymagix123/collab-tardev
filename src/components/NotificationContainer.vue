@@ -1,7 +1,7 @@
 <template>
 	<div class="fixed bottom-4 right-4 z-[9999] pointer-events-none">
 		<div class="flex flex-col items-end">
-			<Notification
+			<NotificationItem
 				v-for="notification in notificationsStore.notifications"
 				:key="notification.id"
 				:notification="notification"
@@ -13,7 +13,7 @@
 
 <script setup lang="ts">
 	import { useNotificationStore } from '../stores/notifications'; // Adjust path
-	import Notification from './Notification.vue';
+	import NotificationItem from './NotificationItem.vue';
 
 	const notificationsStore = useNotificationStore();
 </script>

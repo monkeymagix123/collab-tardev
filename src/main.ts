@@ -1,4 +1,4 @@
-import { createApp, ref, computed } from 'vue';
+import { createApp } from 'vue';
 
 import App from './App.vue';
 

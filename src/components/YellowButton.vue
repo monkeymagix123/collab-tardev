@@ -1,13 +1,14 @@
 <template>
-	<button :class="buttonClasses" @click="$emit('click')">
+	<button :class="buttonClasses" @click="onClick">
 		<slot>a button</slot>
 	</button>
 </template>
 
 <script setup lang="ts">
-	import { computed } from 'vue';
-
 	const emit = defineEmits(['click']);
+	function onClick() {
+		emit('click');
+	}
 
 	// All Tailwind utility classes are used directly
 	// const baseClasses = 'font-bold py-4 px-8 rounded-full shadow-lg transform transition-all duration-200 ease-in-out active:scale-95 focus:outline-none text-2xl';

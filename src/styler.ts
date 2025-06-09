@@ -1,5 +1,3 @@
-import { computed } from 'vue';
-
 export const styler = {
 	writeFullNumber: function (a: number) {
 		if (a < 10) {
