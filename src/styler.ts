@@ -51,7 +51,7 @@ export const styler = {
 	},
 
 	endInt: function (a: number) {
-		let t = this.writeNumber(a);
+		const t = this.writeNumber(a);
 		if (a % 1 != 0) {
 			return t;
 		}

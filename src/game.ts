@@ -25,7 +25,7 @@ export class Game {
 
 	constructor() {
 		// load save data
-		let localSave = localStorage.getItem('saveData');
+		const localSave = localStorage.getItem('saveData');
 		if (localSave) {
 			this.load(JSON.parse(localSave));
 		}
