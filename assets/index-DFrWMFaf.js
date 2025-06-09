@@ -16212,7 +16212,8 @@ const _sfc_main$7 = /* @__PURE__ */ defineComponent({
       }, {
         default: withCtx(() => [
           createBaseVNode("div", {
-            class: normalizeClass([notificationClasses.value, "w-full max-w-sm mx-auto mt-2 p-4 rounded-lg shadow-lg flex items-center space-x-3"])
+            class: normalizeClass([notificationClasses.value, "w-full max-w-sm mx-auto mt-2 p-4 rounded-lg shadow-lg flex items-center space-x-3 cursor-pointer"]),
+            onClick: dismiss
           }, [
             iconPath.value ? (openBlock(), createElementBlock("svg", _hoisted_1$6, [
               createBaseVNode("path", {
