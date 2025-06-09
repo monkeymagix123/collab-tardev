@@ -16723,6 +16723,22 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       var _a;
       return ((_a = tabs.find((tab) => tab.name === activeTab.value)) == null ? void 0 : _a.component) || null;
     });
+    const handleGlobalKeyPress = (event) => {
+      if (event.key === "m" || event.key === "M") {
+        game.buyMax();
+      }
+      if (event.key === "Escape") {
+        console.log("Escape key pressed globally!");
+      }
+    };
+    onMounted(() => {
+      document.addEventListener("keydown", handleGlobalKeyPress);
+      console.log("Global keydown listener added.");
+    });
+    onBeforeUnmount(() => {
+      document.removeEventListener("keydown", handleGlobalKeyPress);
+      console.log("Global keydown listener removed.");
+    });
     return (_ctx, _cache) => {
       return openBlock(), createElementBlock("div", _hoisted_1, [
         createBaseVNode("div", _hoisted_2, [
@@ -16754,7 +16770,7 @@ const _export_sfc = (sfc, props) => {
   }
   return target;
 };
-const App = /* @__PURE__ */ _export_sfc(_sfc_main, [["__scopeId", "data-v-fb382788"]]);
+const App = /* @__PURE__ */ _export_sfc(_sfc_main, [["__scopeId", "data-v-892ff9f6"]]);
 const app = createApp(App);
 const pinia = createPinia();
 app.use(pinia);
