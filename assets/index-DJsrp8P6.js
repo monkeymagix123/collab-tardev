@@ -16707,6 +16707,14 @@ const _sfc_main$1 = /* @__PURE__ */ defineComponent({
     };
   }
 });
+const handleGlobalKeyPress = (event) => {
+  if (event.key === "m" || event.key === "M") {
+    game.buyMax();
+  }
+  if (event.key === "Escape") {
+    console.log("Escape key pressed globally!");
+  }
+};
 const _hoisted_1 = { class: "flex h-screen p-4" };
 const _hoisted_2 = { class: "w-48 bg-gradient-to-b from-blue-700 via-purple-700 to-blue-800 border-r border-white/20" };
 const _hoisted_3 = ["onClick"];
@@ -16724,14 +16732,6 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       var _a;
       return ((_a = tabs.find((tab) => tab.name === activeTab.value)) == null ? void 0 : _a.component) || null;
     });
-    const handleGlobalKeyPress = (event) => {
-      if (event.key === "m" || event.key === "M") {
-        game.buyMax();
-      }
-      if (event.key === "Escape") {
-        console.log("Escape key pressed globally!");
-      }
-    };
     onMounted(() => {
       document.addEventListener("keydown", handleGlobalKeyPress);
       console.log("Global keydown listener added.");
@@ -16771,7 +16771,7 @@ const _export_sfc = (sfc, props) => {
   }
   return target;
 };
-const App = /* @__PURE__ */ _export_sfc(_sfc_main, [["__scopeId", "data-v-892ff9f6"]]);
+const App = /* @__PURE__ */ _export_sfc(_sfc_main, [["__scopeId", "data-v-36d53d25"]]);
 const app = createApp(App);
 const pinia = createPinia();
 app.use(pinia);
