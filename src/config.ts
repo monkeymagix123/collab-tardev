@@ -1,4 +1,7 @@
 export const Config = {
+	// devSpeed: 1e2,
+	devSpeed: 1,
+
 	dimensions: 8,
 
 	startCoins: 10,
@@ -9,4 +12,7 @@ export const Config = {
 
 	baseDimCost: 10,
 	scale: 1.2,
+
+	baseDimMultiplier: 2,
+	dimSoftcap: 250,
 };

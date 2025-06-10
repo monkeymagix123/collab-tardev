@@ -59,7 +59,7 @@ export class Game {
 
 	doUpdate() {
 		const dt = Date.now() - this.time;
-		this.update(dt / 1000);
+		this.update((dt / 1000) * Config.devSpeed);
 		this.time = Date.now();
 	}
 
@@ -104,8 +104,22 @@ export class Game {
 	};
 
 	calculateDimMultiplier(i: number) {
-		const m = Math.pow(1.02, this.dimBought[i]);
+		const dimBought = this.dimBought[i];
+
+		let effectiveDimBought = dimBought;
+
+		if (dimBought > Config.dimSoftcap) {
+			effectiveDimBought =
+				Config.dimSoftcap + Math.pow(dimBought - Config.dimSoftcap, 0.5);
+		}
+
+		effectiveDimBought /= 10;
+
+		const m = Math.pow(Config.baseDimMultiplier, effectiveDimBought);
 		const t = Math.pow(Config.tickspeedMultiplier, this.tickspeed.value);
+
+		// console.log(m * t);
+
 		return m * t;
 	}
 
@@ -219,7 +233,7 @@ export class Game {
 		console.log(this.dimensions[0]);
 
 		// Create a new default game instance
-		const fresh = new Game();
+		// const fresh = new Game();
 
 		// Stop saving temporarily to avoid overwriting
 		clearInterval(this.autoSaveInterval);
@@ -237,7 +251,7 @@ export class Game {
 		// 		(this as Record<string, unknown>)[tkey] = freshValue;
 		// 	}
 		// }
-		this.load(fresh.getSave());
+		// this.load(fresh.getSave());
 
 		this.coins.value = Config.startCoins;
 
