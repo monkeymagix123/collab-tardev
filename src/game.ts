@@ -106,9 +106,9 @@ export class Game {
 	calculateDimMultiplier(i: number) {
 		const dimBought = this.dimBought[i];
 
-		let effectiveDimBought = dimBought;
+		let effectiveDimBought = Math.pow(dimBought, 0.8);
 
-		if (dimBought > Config.dimSoftcap) {
+		if (effectiveDimBought > Config.dimSoftcap) {
 			effectiveDimBought =
 				Config.dimSoftcap + Math.pow(dimBought - Config.dimSoftcap, 0.5);
 		}
