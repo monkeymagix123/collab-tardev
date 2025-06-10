@@ -16275,13 +16275,17 @@ const _sfc_main$6 = /* @__PURE__ */ defineComponent({
   }
 });
 const Config = {
+  // devSpeed: 1e2,
+  devSpeed: 1,
   dimensions: 8,
   startCoins: 10,
   tickspeedMultiplier: 1.1245,
   tickspeedBaseCost: 1e3,
   tickspeedScale: 10,
   baseDimCost: 10,
-  scale: 1.2
+  scale: 1.2,
+  baseDimMultiplier: 2,
+  dimSoftcap: 250
 };
 const styler = {
   writeFullNumber: function(a) {
@@ -16398,10 +16402,8 @@ class Game {
     __publicField(this, "reset", () => {
       console.log("Before load - coins:", this.coins.value);
       console.log(this.dimensions[0]);
-      const fresh = new Game();
       clearInterval(this.autoSaveInterval);
       clearInterval(this.updateInterval);
-      this.load(fresh.getSave());
       this.coins.value = Config.startCoins;
       this.tickspeed.value = 0;
       this.dimensions.fill(0);
@@ -16426,7 +16428,7 @@ class Game {
   }
   doUpdate() {
     const dt = Date.now() - this.time;
-    this.update(dt / 1e3);
+    this.update(dt / 1e3 * Config.devSpeed);
     this.time = Date.now();
   }
   update(dt) {
@@ -16437,7 +16439,13 @@ class Game {
     }
   }
   calculateDimMultiplier(i) {
-    const m = Math.pow(1.02, this.dimBought[i]);
+    const dimBought = this.dimBought[i];
+    let effectiveDimBought = dimBought;
+    if (dimBought > Config.dimSoftcap) {
+      effectiveDimBought = Config.dimSoftcap + Math.pow(dimBought - Config.dimSoftcap, 0.5);
+    }
+    effectiveDimBought /= 10;
+    const m = Math.pow(Config.baseDimMultiplier, effectiveDimBought);
     const t = Math.pow(Config.tickspeedMultiplier, this.tickspeed.value);
     return m * t;
   }
